@@ -26,4 +26,13 @@ struct textDescriptor {
     therm[] thermList; // pourquoi pas utiliser une pile/file
 };
 
+/* ---------------  FUNCTION --------------- */
 
+/**
+* \fn void indexText()
+* \param no parameters
+* \return non-return function
+* \brief
+* Index the file in parameter
+*/
+void indexText();

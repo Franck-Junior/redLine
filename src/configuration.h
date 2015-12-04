@@ -28,3 +28,12 @@ int TRESHOLD_OCCURENCE; // Only keep word which appear more than this number
 * Set configuration variable of the programm.
 */
 void setConfiguration();
+
+/**
+* \fn int isDifferent()
+* \param no parameters
+* \return 1 if it's a different configuration - 0 if it's the same configuration.
+* \brief
+* Compare with the file : .old_configuration.txt if the configuration have changed.
+*/
+int isDifferent();
