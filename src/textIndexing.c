@@ -10,9 +10,7 @@
 
 /* ---------------  INCLUDES --------------- */
 #include <string.h>
-
 #include "textIndexing.h"
-
 /* ---------------  FUNCTION --------------- */
 
 /**
@@ -31,7 +29,7 @@ void indexText(char* fileName){
     {
         do
         {
-            character = fgetc(file); // On lit le caractère
+            character = fgetc(file); // On lit le carac
             if(character == '<'){
                 skipBracket(file);
             }
@@ -60,7 +58,9 @@ void indexText(char* fileName){
 * Add the descriptor in the text descriptor base
 */
 void addToBaseDescriptor(){
-
+	if() {
+		
+	}
 }
 
 /**
@@ -71,7 +71,7 @@ void addToBaseDescriptor(){
 * Read file and process to indexing (also set descriptor variables)
 */
 void processIndexing(char* fileName){
-
+	
 }
 
 /**
