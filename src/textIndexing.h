@@ -15,25 +15,26 @@
 * \brief
 * therm contains a word with his occurence.
 */
-struct therm {
+typedef struct {
     char* word;
     unsigned int occurence;
-};
+} therm;
 
 /**
 * \struct textDescriptor
 * \brief
 * The text descriptor contains information about a specific text file.
 */
-struct textDescriptor {
-    struct therm thermList; // pourquoi pas utiliser une pile/file
-};
+typedef struct {
+    therm* thermList; // pourquoi pas utiliser une pile/file
+    int size;
+} textDescriptor;
 
 /* ---------------  FUNCTION --------------- */
 
 /**
 * \fn void indexText()
-* \param no parameters
+* \param char*
 * \return non-return function
 * \brief
 * Index the file in parameter - Init the descriptor
@@ -42,25 +43,16 @@ void indexText(char* fileName);
 
 /**
 * \fn void addToBaseDescriptor()
-* \param no parameters
+* \param char*
 * \return non-return function
 * \brief
 * Add the descriptor in the text descriptor base
 */
-void addToBaseDescriptor();
-
-/**
-* \fn void processIndexing()
-* \param no parameters
-* \return non-return function
-* \brief
-* Read file and process to indexing (also set descriptor variables)
-*/
-void processIndexing(char* fileName);
+void addToBaseDescriptor(char* string);
 
 /**
 * \fn void skipBracket()
-* \param no parameters
+* \param FILE*
 * \return non-return function
 * \brief
 * After start reading a bracket this method will skip character until the end of the bracket
@@ -68,10 +60,55 @@ void processIndexing(char* fileName);
 void skipBracket(FILE* file);
 
 /**
-* \fn void skipBracket()
-* \param no parameters
+* \fn void getNextWord()
+* \param FILE*
 * \return The string of the next word
 * \brief
 * Get the next word of the text - respect the configuration
 */
 char* getNextWord(FILE* file);
+
+/**
+* \fn void addWordToDescriptor()
+* \param textDescriptor*, char*
+* \return non-return function 
+* \brief
+* Add the word to Descriptor - Increase occurence if descriptor already contains word
+*/
+void addWordToDescriptor(textDescriptor* myDescriptor, char* string);
+
+/**
+* \fn void freeMemory()
+* \param textDescriptor*
+* \return non-return function 
+* \brief
+* Clean the memory
+*/
+void freeMemory(textDescriptor* myDescriptor);
+
+/**
+* \fn void containsWord()
+* \param textDescriptor, char*
+* \return 0 if the descriptor contains the word
+* \brief
+* Check if it contains the word
+*/
+int containsWord(textDescriptor myDescriptor, char* string);
+
+/**
+* \fn void descriptorToString()
+* \param textDescriptor
+* \return char* of the descriptor
+* \brief
+* The string of the descriptor
+*/
+char* descriptorToString(textDescriptor myDescriptor);
+
+/**
+* \fn void parseCharacter()
+* \param wchar_t*
+* \return char* of treated string
+* \brief
+* Do all treatment the string
+*/
+char* parseCharacter(wchar_t* string);

@@ -1,0 +1,5 @@
+TODO :
+
+prendre en compte le fichier à indexer
+prendre en compte les parametres de configuration
+(possiblement faire la configuration pour textIndexing)
