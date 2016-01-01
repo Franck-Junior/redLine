@@ -3,6 +3,7 @@
 #include<math.h>
 #include "PictureIndexation.h"
 
+// Whenever they are used, H and L will mean "hauteur" and "largeur"
 
 // void Quantification (File* F, File* Quant, int n){
 //   F fopen("sijdeiz","r");
@@ -53,7 +54,6 @@ void Quantification(FILE* Image, int n, int H, int L) {
     int j,i,a;
     FILE * ImageQuantifie;
     ImageQuantifie = fopen("QUANTIFIED_IMAGE.txt", "w+");
-    //avec QPICTURE, le tableau de pixels quantifiés
     for(i = 0; i < H; i++) {
         for(j = 0; j < L; j++) {
             fscanf(Image,"%d ",&a);
@@ -61,9 +61,26 @@ void Quantification(FILE* Image, int n, int H, int L) {
             fprintf(ImageQuantifie," ");
         }
         fprintf(ImageQuantifie,"\t");
-//       nBitQuantificator(n, PICTURE[i][j], QPICTURE[i][j]);
     }
     fclose(ImageQuantifie);
 
 }
 
+void histogramme(FILE* Image, int niv, int H, int L){ // calcule et affiche l'histogramme d'une image
+  FILE* Histo;
+  int i,j,a;
+  Histo = fopen("IMAGE_HISTOGRAM.txt", "w+");
+  int histo[256] = {0};
+  for(i = 0; i<H; i++){
+		for(j = 0; j<L; j++){
+		  fscanf(Image,"%d ",&a);
+		  histo[a]++;
+		
+		}
+		
+  }
+  
+  for(i = 0; i < niv; i++) fprintf(Histo,"%d ",histo[i]);
+  fprintf(Histo,"\n");
+  fclose(Histo);
+}

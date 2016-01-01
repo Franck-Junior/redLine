@@ -11,7 +11,7 @@ void Quantification(FILE* Image, int n, int H, int L);
 /**
  *realizes a quantification on every pixel of the picture and return the results in a file
  */
-// void histogramme(FILE* F, FILE* Histo); 
+void histogramme(FILE* Image, int niv, int H, int L); 
 // /**
 //  *computes a file histogramme from a file and return the result on another file
 //  */
