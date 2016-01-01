@@ -1,23 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
-// #include<indexationImage.h>
+#include "PictureIndexation.h"
 
-void nBitQuantificator(int n, int pixelLevel, int*T) {
-    int j;
-    pixelLevel = pixelLevel-(int)pow(2,7);
-    for(j = 7; j > 7-n; j--) {
-        if(pixelLevel >= 0)
-            *(T+7-j) =  1;
-        else {
-            *(T+7-j) =  0;
-            pixelLevel = pixelLevel+(int)pow(2,j);
-        }
-        pixelLevel = pixelLevel-(int)pow(2,j-1);
-
-    }
-
-}
 
 // void Quantification (File* F, File* Quant, int n){
 //   F fopen("sijdeiz","r");
@@ -31,13 +16,54 @@ void nBitQuantificator(int n, int pixelLevel, int*T) {
 //   fclose(F);
 // }
 
-int main(void) {
-    int i,T[8]= {0};
+void nBitQuantificator(FILE * FichierQuantif, int n, int pixelLevel) {
+    int j;
+    if(FichierQuantif != NULL) {
+        pixelLevel = pixelLevel-(int)pow(2,7);
+        for(j = 7; j > 7-n; j--) {
+            if(pixelLevel >= 0)
+                fprintf(FichierQuantif,"1");
+            else {
+                fprintf(FichierQuantif, "0");
+                pixelLevel = pixelLevel+(int)pow(2,j);
+            }
+            pixelLevel = pixelLevel-(int)pow(2,j-1);
 
-    nBitQuantificator(8,3,T);
-    for(i = 0; i < 8; i++) {
-        printf("Poids %d : %d\n",7-i,*(T+i));
-    }
-    return 0;
+        }
+    } else printf("Desole probleme d'ouverture niveau 2...\n");
 
 }
+
+void ImageBuilder(int H, int L) {
+    FILE * Image;
+    int i,j;
+    Image = fopen("IMAGE.txt", "w+");
+    if(Image != NULL) {
+        for(i = 0; i < H; i++) {
+            for(j = 0; j < L; j++) {
+                fprintf(Image,"%d\t",2*i*j);
+            }
+            fprintf(Image,"\n");
+        }
+        fclose(Image);
+    }
+}
+
+void Quantification(FILE* Image, int n, int H, int L) {
+    int j,i,a;
+    FILE * ImageQuantifie;
+    ImageQuantifie = fopen("QUANTIFIED_IMAGE.txt", "w+");
+    //avec QPICTURE, le tableau de pixels quantifiés
+    for(i = 0; i < H; i++) {
+        for(j = 0; j < L; j++) {
+            fscanf(Image,"%d ",&a);
+            nBitQuantificator(ImageQuantifie,n,a);
+            fprintf(ImageQuantifie," ");
+        }
+        fprintf(ImageQuantifie,"\t");
+//       nBitQuantificator(n, PICTURE[i][j], QPICTURE[i][j]);
+    }
+    fclose(ImageQuantifie);
+
+}
+
