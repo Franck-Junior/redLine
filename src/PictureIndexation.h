@@ -23,9 +23,12 @@ void histogramme(FILE* Image, int niv, int H, int L, int id);
 // /**
 //  *links the name of the descriptor with the file name and saves it in the link base
 //  */
-// void comparison(FILE Histo1, FILE Histo2);
-// /**
-//  * compare two histo and spot the similarities of two pictures
-//  */
-
+int comparison(int niv, FILE* Histo1, FILE* Histo2);
+/**
+ * compare two histo and spot the similarities of two pictures
+ */
+int file1comparedfile2(int niv, int id1, int id2);
+/**
+ * compare two selected pictures by giving their descriptor id in the parameters
+ */
 
