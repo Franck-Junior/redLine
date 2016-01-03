@@ -66,11 +66,12 @@ void Quantification(FILE* Image, int n, int H, int L) {
 
 }
 
-void histogramme(FILE* Image, int niv, int H, int L){ // calcule et affiche l'histogramme d'une image
+void histogramme(FILE* Image, int niv, int H, int L, int id){ // calcule et affiche l'histogramme d'une image
   FILE* Histo;
   int i,j,a;
-  Histo = fopen("IMAGE_HISTOGRAM.txt", "w+");
+  Histo = fopen("BASE_DESCRIPTEUR_IMAGE.txt", "a+");
   int histo[256] = {0};
+  fprintf(Histo,"%d\n",id);
   for(i = 0; i<H; i++){
 		for(j = 0; j<L; j++){
 		  fscanf(Image,"%d ",&a);
