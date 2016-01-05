@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<math.h>
 #include "PictureIndexation.h"
+#include<string.h>
 
 // Whenever they are used, H and L will mean "hauteur" and "largeur"
 
@@ -23,6 +24,14 @@ void nBitQuantificator(FILE * FichierQuantif, int n, int pixelLevel) {
 
 }
 
+int quantiToPixellevel(int niv, char quanti[]){
+  int i,level = 0;
+  for(i = 0; i < niv; i++){
+    if(quanti[i]=='1') level = level+(int)pow(2,niv-1-i);
+  }
+  return level;
+}
+
 void ImageBuilder(int H, int L) {
     FILE * Image;
     int i,j;
@@ -38,18 +47,85 @@ void ImageBuilder(int H, int L) {
     }
 }
 
-void Quantification(FILE* Image, int n, int H, int L) {
-    int j,i,a;
-    FILE * ImageQuantifie;
-    ImageQuantifie = fopen("QUANTIFIED_IMAGE.txt", "w+");
+void Quantification(FILE* Image, int n) {
+    int j,i,a,H,L;
+    char quanti[2];
+    FILE * ImageQuantifieR;
+    FILE * ImageQuantifieV;
+    FILE * ImageQuantifieB;
+    ImageQuantifieR = fopen("QUANTIFIED_IMAGE_ROUGE.txt", "w+");
+    ImageQuantifieV = fopen("QUANTIFIED_IMAGE_VERT.txt", "w+");
+    ImageQuantifieB = fopen("QUANTIFIED_IMAGE_BLEU.txt", "w+");
+    fscanf(Image,"%d ",&H);
+    fscanf(Image,"%d ",&L);
+    fscanf(Image,"%d ",&a);
+    
     for(i = 0; i < H; i++) {
         for(j = 0; j < L; j++) {
             fscanf(Image,"%d ",&a);
-            nBitQuantificator(ImageQuantifie,n,a);
-            fprintf(ImageQuantifie," ");
+            nBitQuantificator(ImageQuantifieR,n,a);
+            fprintf(ImageQuantifieR," ");
         }
-        fprintf(ImageQuantifie,"\t");
+        fprintf(ImageQuantifieR,"\n");
     }
+    fclose(ImageQuantifieR);
+    
+    for(i = 0; i < H; i++) {
+        for(j = 0; j < L; j++) {
+            fscanf(Image,"%d ",&a);
+            nBitQuantificator(ImageQuantifieV,n,a);
+            fprintf(ImageQuantifieV," ");
+        }
+        fprintf(ImageQuantifieV,"\n");
+    }
+    fclose(ImageQuantifieV);
+    
+    for(i = 0; i < H; i++) {
+        for(j = 0; j < L; j++) {
+            fscanf(Image,"%d ",&a);
+            nBitQuantificator(ImageQuantifieB,n,a);
+            fprintf(ImageQuantifieB," ");
+        }
+        fprintf(ImageQuantifieB,"\n");
+    }
+    fclose(ImageQuantifieB);
+    
+    ImageQuantifieR = fopen("QUANTIFIED_IMAGE_ROUGE.txt", "r+");
+    ImageQuantifieV = fopen("QUANTIFIED_IMAGE_VERT.txt", "r+");
+    ImageQuantifieB = fopen("QUANTIFIED_IMAGE_BLEU.txt", "r+");
+    FILE* ImageQuantifie = fopen("QUANTIFIED_IMAGE.txt","w");
+    
+    for(i = 0; i < H; i++){
+      for(j = 0; j < L; j++){
+    fscanf(ImageQuantifieR,"%s",quanti);
+    fprintf(ImageQuantifie,"%s",quanti);
+    fscanf(ImageQuantifieV,"%s",quanti);
+    fprintf(ImageQuantifie,"%s",quanti);
+    fscanf(ImageQuantifieB,"%s",quanti);
+    fprintf(ImageQuantifie,"%s ",quanti);
+      }
+    fprintf(ImageQuantifie,"\n");
+    }
+    fclose(ImageQuantifieR);
+    fclose(ImageQuantifieV);
+    fclose(ImageQuantifieB);
+    system("rm QUANTIFIED_IMAGE_ROUGE.txt");
+    system("rm QUANTIFIED_IMAGE_VERT.txt");
+    system("rm QUANTIFIED_IMAGE_BLEU.txt");
+    fclose(ImageQuantifie);
+    
+    ImageQuantifie = fopen("QUANTIFIED_IMAGE.txt","r+");
+    ImageQuantifieR = fopen("IMAGE.txt","w");
+    
+    for(i = 0; i < H; i++){
+      for(j = 0; j < L; j++){
+    fscanf(ImageQuantifie,"%s",quanti); /*strcpy(quanti,"000011");*/
+    fprintf(ImageQuantifieR,"%d ",quantiToPixellevel(3*n,quanti));
+      }
+      fprintf(ImageQuantifieR,"\n");
+    }
+    
+    fclose(ImageQuantifieR);
     fclose(ImageQuantifie);
 
 }
@@ -139,6 +215,109 @@ void textDescriptorLinker(char fileName[], int id){
       fprintf(LISTE_BASE,"%s ", fileName);
       fprintf(LISTE_BASE,"%d\n",id);
       fclose(LISTE_BASE);
+   
+}
+
+int BlackandWhiteIndexation(){
+  FILE * Image;
+    FILE * LISTE_FICHIER;
+    char nomfichier[100];
+    int H,L,buffer,nbfichiers,niv= 256;
+    LISTE_FICHIER = fopen("listefichier","r");
+    char chemin[100] = "./IMAGE_NOIR_ET_BLANC/";
+
+    while(LISTE_FICHIER == NULL) { /*Cette boucle permet de faire une liste des fichiers présents dans le dossier*/
+        system("ls ./IMAGE_NOIR_ET_BLANC/ > listefichier");
+        LISTE_FICHIER = fopen("listefichier","r");
+    }
+
+    nbfichiers = 0;
+    while(!feof(LISTE_FICHIER)) { /*Celle-ci permet de compter le nombre de fichiers dans le dossier*/
+        fscanf(LISTE_FICHIER,"%s",nomfichier);
+        nbfichiers++;
+    }
+    fclose(LISTE_FICHIER);
+
+    nbfichiers -= 1;
+    LISTE_FICHIER = fopen("listefichier","r");
+    int i = 0;
+    while(i < nbfichiers) {
+        fscanf(LISTE_FICHIER,"%s",nomfichier);
+        strcat(chemin,nomfichier);
+        Image = fopen(chemin, "r");
+
+        if(Image != NULL) {
+            fscanf(Image,"%d ",&H);
+            fscanf(Image,"%d ",&L);
+            fscanf(Image,"%d ",&buffer);
+            histogramme(Image,256,H,L,i+1);
+            fclose(Image);
+        } else printf("Desole probleme d'ouverture niveau 1...\n");
+	
+	textDescriptorLinker(nomfichier, i+1);
+        i++;
+        strcpy(chemin, "./IMAGE_NOIR_ET_BLANC/");
+    }
+    
+    fclose(LISTE_FICHIER);
+    system("rm listefichier");
+    return 0;
+}
+
+
+int ColorIndexation(){
+  
+ FILE * Image;
+    FILE * LISTE_FICHIER;
+    char nomfichier[100];
+    int H,L,buffer,nbfichiers,niv= 256;
+    LISTE_FICHIER = fopen("listefichier","r");
+    char cheminNB[100] = "./IMAGE_NOIR_ET_BLANC/";
+    char chemin[100] = "./IMAGE_COULEUR/";
+    char commande[100];
+    strcpy(commande,"ls ");
+    strcat(commande,chemin);
+    strcat(commande," > listefichier");
+    
+    while(LISTE_FICHIER == NULL) { /*Cette boucle permet de faire une liste des fichiers présents dans le dossier*/
+        system(commande);
+        LISTE_FICHIER = fopen("listefichier","r");
+    }
+
+    nbfichiers = 0;
+    while(!feof(LISTE_FICHIER)) { /*Celle-ci permet de compter le nombre de fichiers dans le dossier*/
+        fscanf(LISTE_FICHIER,"%s",nomfichier);
+        nbfichiers++;
+    }
+    fclose(LISTE_FICHIER);
+
+    nbfichiers -= 1;
+    LISTE_FICHIER = fopen("listefichier","r");
+    int i = 0;
+    strcpy(commande,chemin);
+    while(i < nbfichiers) {
+        fscanf(LISTE_FICHIER,"%s",nomfichier);
+        strcat(commande,nomfichier);
+        Image = fopen(commande, "r");
+	Quantification(Image,2);
+	fclose(Image);
+	Image = fopen("IMAGE.txt","r+");
+        if(Image != NULL) {
+            fscanf(Image,"%d ",&H);
+            fscanf(Image,"%d ",&L);
+            fscanf(Image,"%d ",&buffer);
+            histogramme(Image,64,H,L,i+1);
+            fclose(Image);
+        } else printf("Desole probleme d'ouverture niveau 1...\n");
+	
+	textDescriptorLinker(nomfichier, i+1);
+        i++;
+	strcpy(commande,chemin);
+        //strcpy(chemin, "./IMAGE_NOIR_ET_BLANC/");
+    }
     
     
+    fclose(LISTE_FICHIER);
+    system("rm listefichier"); 
+  
 }

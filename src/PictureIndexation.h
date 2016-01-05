@@ -7,7 +7,7 @@ void nBitQuantificator(FILE * FichierQuantif, int n, int pixelLevel);
 /**
  *quantifies a pixel level to n bit given on the parameter, then returns the n bits in the array T
  */ 
-void Quantification(FILE* Image, int n, int H, int L); 
+void Quantification(FILE* Image, int n); 
 /**
  *realizes a quantification on every pixel of the picture and return the results in a file
  */
@@ -27,4 +27,6 @@ int file1comparedfile2(int niv, int id1, int id2);
 /**
  * compares two selected pictures by giving their descriptor id in the parameters
  */
+int BlackandWhiteIndexation();
+int ColorIndexation();
 
