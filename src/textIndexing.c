@@ -12,6 +12,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <wchar.h>
+#include <wctype.h>
 #include <locale.h>
 #include "textIndexing.h"
 /* ---------------  FUNCTION --------------- */
@@ -25,7 +26,7 @@
 */
 void indexText(char* fileName) {
 setlocale(LC_CTYPE, "");
-printf("debut du programme\n");
+//printf("debut du programme\n");
     FILE* file = NULL;
     textDescriptor myDescriptor;
     myDescriptor.thermList = malloc(sizeof(therm));
@@ -34,28 +35,29 @@ printf("debut du programme\n");
 	initTherm.occurence = 0;
     myDescriptor.thermList[0] = initTherm;
     myDescriptor.size = 1;
-    file = fopen("../data/test.txt", "r");
-    wint_t character;
+//	file = fopen("../data/test_file/Textes/Textes_UTF8/chercheurs_utf8.xml", "r");
+	file = fopen("../data/test_file/Textes/Textes_UTF8/03-Mimer_un_signal_nerveux_pour_utf8.xml", "r");
+
+    int character;
     if (file != NULL) {
         do {
-            character = fgetwc(file);
+            character = fgetc(file);
             if(character == '<') {
                 skipBracket(file);
             }
             if(character != ' ' && character != '<') {
-                ungetwc(character,file);
+                ungetc(character,file);
             }
             char* string = getNextWord(file);
             if(string != NULL) {
                 addWordToDescriptor(&myDescriptor,string);
             }
-        } while (character != WEOF);
+        } while (character != EOF);
 
         for (int i = 0; i < myDescriptor.size; i++) {
             printf("%s , occurence : %i\n",myDescriptor.thermList[i].word,myDescriptor.thermList[i].occurence);
         }
 		char* result = descriptorToString(myDescriptor);
-		printf("chaine de fin : %s\n",result);
 		addToBaseDescriptor(result);
     } else {
         // On affiche un message d'erreur si on veut
@@ -74,17 +76,17 @@ printf("debut du programme\n");
 */
 void addToBaseDescriptor(char* string) {
 	if(strlen(string) > 1){
-
-	char* redirectionCommand = " >> ../data/descripteur.txt";
-	char* command = malloc(7+strlen(string)+strlen(redirectionCommand));
-	command[0] = 'e';command[1] = 'c';command[2] = 'h';command[3] = 'o';command[4] = ' ';command[5] = '"';
-	command = strcat(command,string);
-	command = strcat(command,"\"");
-	command = strcat(command,redirectionCommand);
-	system(command);
-	free(string);
-	free(command);
+		char* redirectionCommand = " >> ../data/descripteur.txt";
+		char* command = NULL;
+		command = malloc(8+strlen(string)+strlen(redirectionCommand));
+		command[0] = 'e';command[1] = 'c';command[2] = 'h';command[3] = 'o';command[4] = ' ';command[5] = '"';command[6] = '\0';
+		command = strcat(command,string);
+		command = strcat(command,"\"");
+		command = strcat(command,redirectionCommand);
+		system(command);
+		free(command);
 	}
+	free(string);
 }
 
 /**
@@ -95,10 +97,10 @@ void addToBaseDescriptor(char* string) {
 * After start reading a bracket this method will skip character until the end of the bracket
 */
 void skipBracket(FILE* file) {
-    wint_t characterReaded;
+    int characterReaded;
     do {
-        characterReaded = fgetwc(file); // On lit le caractère
-    } while (characterReaded != '>' && characterReaded != WEOF);
+        characterReaded = fgetc(file); // On lit le caractère
+    } while (characterReaded != '>' && characterReaded != EOF);
 
 }
 
@@ -110,23 +112,23 @@ void skipBracket(FILE* file) {
 * Get the next word of the text - respect the configuration
 */
 char* getNextWord(FILE* file) {
-    wchar_t* string = malloc(1*sizeof(wchar_t));
+    char* string = malloc(1);
     int size = 1;
-    wchar_t character;
-    wint_t characterReaded;
-    characterReaded = fgetwc(file);
-    while(characterReaded != ' ' && characterReaded != WEOF && characterReaded != '\n' && characterReaded != '<') {
-        character = (wchar_t)characterReaded;
-        string = realloc(string,++size*sizeof(wchar_t));
+    char character;
+    int characterReaded;
+    characterReaded = fgetc(file);
+    while(characterReaded != ' ' && characterReaded != EOF && characterReaded != '\n' && characterReaded != '<') {
+        character = (char)characterReaded;
+        string = realloc(string,++size*sizeof(char));
         string[size-2] = character;
-        characterReaded = fgetwc(file);
-	wprintf(L"char dans getword : %li\n",(unsigned)characterReaded);
+        characterReaded = fgetc(file);
     }
 	if(characterReaded == '<'){
-		ungetwc(characterReaded,file);
+		ungetc(characterReaded,file);
 	}
-    string[size-1] = '\0';
-	if(string[0] == '\n' || (int)string[0] == 0 || wcslen(string) < 2 || wcslen(string) > 10){
+	    string[size-1] = '\0';
+	//printf("%s ",string);
+	if(string[0] == '\n' || (int)string[0] == 0 || strlen(string) < 4 || strlen(string) > 10){ // CONFIGURATION
 		return NULL;
 	}
 	return parseCharacter(string);
@@ -143,9 +145,7 @@ void addWordToDescriptor(textDescriptor* myDescriptor, char* string) {
 	int test = containsWord(*myDescriptor,string);
 	if(test != 0){
     myDescriptor->size++;
-    if((myDescriptor->thermList = (therm*)realloc(myDescriptor->thermList,(myDescriptor->size)*sizeof(therm))) == NULL) {
-        exit(0);
-    }
+	myDescriptor->thermList = (therm*)realloc(myDescriptor->thermList,(myDescriptor->size)*sizeof(therm));
     therm myTherm;
     myTherm.word = string;
 	myTherm.occurence = 1;
@@ -158,13 +158,13 @@ void addWordToDescriptor(textDescriptor* myDescriptor, char* string) {
 
 /**
 * \fn void freeMemory()
-* \param textDescriptor*
+* \param textDescriptor
 * \return non-return function 
 * \brief
 * Clean the memory
 */
 void freeMemory(textDescriptor* myDescriptor) {
-    for (int i = 1; i < myDescriptor->size; i++) {
+    for (int i = 1; i < myDescriptor->size-1; i++) {
         free(myDescriptor->thermList[i].word);
     }
     free(myDescriptor->thermList);
@@ -197,14 +197,28 @@ int containsWord(textDescriptor myDescriptor, char* string) {
 * The string of the descriptor
 */
 char* descriptorToString(textDescriptor myDescriptor){
-	char* toString = malloc(1);
+	int size = 0;
+	char* toString = NULL;
 	char* stringTmp = NULL;
+	int isFirst=0;
 	for (int i = 1; i < myDescriptor.size; i++) {
 		if(myDescriptor.thermList[i].occurence > 2){
-		stringTmp = myDescriptor.thermList[i].word;
-		toString = realloc(toString,strlen(toString)+strlen(stringTmp)+2);
-		toString = strcat(toString,stringTmp);
-		toString = strcat(toString,";");
+			if(isFirst == 0){
+				toString = myDescriptor.thermList[i].word;
+				size = strlen(myDescriptor.thermList[i].word)+2;
+				toString = realloc(toString,size);
+				toString[size-2] = ';';
+				toString[size-1] = '\0';
+				isFirst = 1;
+			}
+			else {
+				stringTmp = myDescriptor.thermList[i].word;
+				size += strlen(stringTmp)+2;
+				toString = realloc(toString,size);
+				toString[size-1] = '\0';
+				toString = strcat(toString,stringTmp);
+				toString = strcat(toString,";");
+			}
 		}
 	}
 	return toString;
@@ -217,19 +231,28 @@ char* descriptorToString(textDescriptor myDescriptor){
 * \brief
 * Do all treatment the string
 */
-char* parseCharacter(wchar_t* string){
-	wchar_t * corr = L"\0\0\x0A\0\x0D\0àAâAäAéEêEèEëEîIïIôOöOûUüUçC";
-	for (int i = 0; i < wcslen(string); i++){
+char* parseCharacter(char* string){
+	int size = strlen(string)+1;
+	wchar_t* newString = malloc(size*sizeof(wchar_t));
+	mbstowcs(newString,string,size);
+	newString[size-1] = '\0';
+	wchar_t* corr = L"\0\0\x0A\0\x0D\0àAâAäAéEêEèEëEîIïIôOöOûUüUçC";
+	for (int i = 0; i < wcslen(newString); i++){
 		for (int j = 0; j < 17; j++) {
-			if(string[i] == corr[2*j]){
-				string[i] = corr[2*j + 1];
+			if(newString[i] == corr[2*j]){
+				newString[i] = corr[2*j + 1];
+				break;
 			}
 		}
 	}
-	for (int i = 0; i < wcslen(string); i++) {
-		string[i] = tolower(string[i]);
+	for (int i = 0; i < wcslen(newString); i++) {
+		newString[i] = towlower(newString[i]);
 	}
-	char* newString = malloc(wcslen(string));
-	wcstombs(newString,string,wcslen(string));
-	return newString;
+	free(string);
+	string = NULL;
+	string = malloc(size);
+	wcstombs(string,newString,size);
+	free(newString);
+	string[size-1] = '\0';
+	return string;
 }

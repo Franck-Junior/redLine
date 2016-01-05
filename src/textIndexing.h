@@ -79,7 +79,7 @@ void addWordToDescriptor(textDescriptor* myDescriptor, char* string);
 
 /**
 * \fn void freeMemory()
-* \param textDescriptor*
+* \param textDescriptor
 * \return non-return function 
 * \brief
 * Clean the memory
@@ -111,4 +111,4 @@ char* descriptorToString(textDescriptor myDescriptor);
 * \brief
 * Do all treatment the string
 */
-char* parseCharacter(wchar_t* string);
+char* parseCharacter(char* string);
