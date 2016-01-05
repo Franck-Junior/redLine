@@ -5,18 +5,6 @@
 
 // Whenever they are used, H and L will mean "hauteur" and "largeur"
 
-// void Quantification (File* F, File* Quant, int n){
-//   F fopen("sijdeiz","r");
-//   Quant fopen("sijdsdeiz","w");
-//   int tab[8];
-//   while(!eof(F)){
-//     fscanf(F,"%d",pixelLevel);
-//     nBitQuantificator(2,pixelLevel,tab);
-//     fprintf(Quant,"%d",tab);
-//   }
-//   fclose(F);
-// }
-
 void nBitQuantificator(FILE * FichierQuantif, int n, int pixelLevel) {
     int j;
     if(FichierQuantif != NULL) {
@@ -66,7 +54,7 @@ void Quantification(FILE* Image, int n, int H, int L) {
 
 }
 
-void histogramme(FILE* Image, int niv, int H, int L, int id) { // calcule et affiche l'histogramme d'une image
+void histogramme(FILE* Image, int niv, int H, int L, int id) {
     FILE* Histo;
     int i,j,a;
     Histo = fopen("BASE_DESCRIPTEUR_IMAGE.txt", "a+");
@@ -144,4 +132,13 @@ int file1comparedfile2(int niv, int id1, int id2) {
         system("rm HISTO_1");
         system("rm HISTO_2");
     } else printf("Desole probleme d'ouverture niveau 1...\n");
+}
+
+void textDescriptorLinker(char fileName[], int id){
+  FILE* LISTE_BASE = fopen("LISTE_BASE_IMAGE","a+");
+      fprintf(LISTE_BASE,"%s ", fileName);
+      fprintf(LISTE_BASE,"%d\n",id);
+      fclose(LISTE_BASE);
+    
+    
 }

@@ -12,23 +12,19 @@ void Quantification(FILE* Image, int n, int H, int L);
  *realizes a quantification on every pixel of the picture and return the results in a file
  */
 void histogramme(FILE* Image, int niv, int H, int L, int id); 
-// /**
-//  *computes a file histogramme from a file and return the result on another file
-//  */
-// void PictureDescriptor(FILE* Histo, char[] id, int* descriptor, FILE* descBase); 
-// /**
-//  *returns the picture descriptor in the descriptor base file
-//  */
-// void textDescriptorLinker(char fileName[], char id[], FILE* IDNAME); 
-// /**
-//  *links the name of the descriptor with the file name and saves it in the link base
-//  */
+/**
+ *computes a file histogramme from a file and returns the picture descriptor in the descriptor base file
+ */
+void textDescriptorLinker(char fileName[], int id); 
+/**
+ *links the name of the descriptor with the file name and saves it in the link base
+ */
 int comparison(int niv, FILE* Histo1, FILE* Histo2);
 /**
- * compare two histo and spot the similarities of two pictures
+ * compares two histo and spot the similarities of two pictures
  */
 int file1comparedfile2(int niv, int id1, int id2);
 /**
- * compare two selected pictures by giving their descriptor id in the parameters
+ * compares two selected pictures by giving their descriptor id in the parameters
  */
 
