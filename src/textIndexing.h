@@ -71,7 +71,7 @@ char* getNextWord(FILE* file);
 /**
 * \fn void addWordToDescriptor()
 * \param textDescriptor*, char*
-* \return non-return function 
+* \return non-return function
 * \brief
 * Add the word to Descriptor - Increase occurence if descriptor already contains word
 */
@@ -80,7 +80,7 @@ void addWordToDescriptor(textDescriptor* myDescriptor, char* string);
 /**
 * \fn void freeMemory()
 * \param textDescriptor
-* \return non-return function 
+* \return non-return function
 * \brief
 * Clean the memory
 */
