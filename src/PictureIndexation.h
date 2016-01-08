@@ -3,30 +3,34 @@
 #include<string.h>
 
 
-void nBitQuantificator(FILE * FichierQuantif, int n, int pixelLevel); 
+void nBitQuantificator(FILE * FichierQuantif, int n, int pixelLevel);
 /**
  *quantifies a pixel level to n bit given on the parameter, then returns the n bits in the array T
- */ 
-void Quantification(FILE* Image, int n); 
+ */
+void Quantification(FILE* Image, int n);
 /**
  *realizes a quantification on every pixel of the picture and return the results in a file
  */
-void histogramme(FILE* Image, int niv, int H, int L, int id); 
+void histogramme(FILE* Image, int niv, int H, int L, int id);
 /**
  *computes a file histogramme from a file and returns the picture descriptor in the descriptor base file
- */
-void textDescriptorLinker(char fileName[], int id); 
-/**
- *links the name of the descriptor with the file name and saves it in the link base
  */
 int comparison(int niv, FILE* Histo1, FILE* Histo2);
 /**
  * compares two histo and spot the similarities of two pictures
  */
-int file1comparedfile2(int niv, int id1, int id2);
+void textDescriptorLinker(char fileName[], char chemin[100], int id);
 /**
- * compares two selected pictures by giving their descriptor id in the parameters
+ *links the name of the descriptor with the file name and saves it in the link base
  */
-int BlackandWhiteIndexation();
-int ColorIndexation();
+int file1comparedTofile2(int niv, char chemin[100], int id1, int id2);
+/**
+ * compares two selected pictures by giving their descriptor id in the parameters and the histogramme level
+ */
+int blackandWhiteIndexation(char cheminlocal[100]);
+int colorIndexation(char cheminlocal[100]);
+int researchPictures(int niv, int id);
+void descToFileName(int id, char fileName[100], int option);
+int file1Tofile2comparison(int niv, char chemin[100],int id1,int id2);
+
 
