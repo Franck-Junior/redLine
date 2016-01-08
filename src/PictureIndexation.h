@@ -11,7 +11,7 @@ void Quantification(FILE* Image, int n);
 /**
  *realizes a quantification on every pixel of the picture and return the results in a file
  */
-void histogramme(FILE* Image, int niv, int H, int L, int id);
+void histogramme(FILE* Image, int niv, char chemin[100], int H, int L, int id);
 /**
  *computes a file histogramme from a file and returns the picture descriptor in the descriptor base file
  */
@@ -27,10 +27,13 @@ int file1comparedTofile2(int niv, char chemin[100], int id1, int id2);
 /**
  * compares two selected pictures by giving their descriptor id in the parameters and the histogramme level
  */
-int blackandWhiteIndexation(char cheminlocal[100]);
-int colorIndexation(char cheminlocal[100]);
-int researchPictures(int niv, int id);
-void descToFileName(int id, char fileName[100], int option);
+int blackandWhiteIndexation(char cheminlocal[100], int nbdesc);
+int colorIndexation(char cheminlocal[100], int nbdesc);
+// int researchPictures(int niv, int id);
+void researchPictures(char fileRef[100], int niv,char chemin[100], char fileRes[100]);
+void descToFileName(int id, char chemin[100], char currentfile[100], int option);
+/**
+ * converts a descriptor id into a fileName
+ */
 int file1Tofile2comparison(int niv, char chemin[100],int id1,int id2);
-
 

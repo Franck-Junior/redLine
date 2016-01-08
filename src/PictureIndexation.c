@@ -130,10 +130,16 @@ void Quantification(FILE* Image, int n) {
 
 }
 
-void histogramme(FILE* Image, int niv, int H, int L, int id) {
+void histogramme(FILE* Image, int niv, char chemin[100], int H, int L, int id) {
     FILE* Histo;
     int i,j,a;
-    Histo = fopen("BASE_DESCRIPTEUR_IMAGE.txt", "a+");
+    char cheminlocal[100];
+    strcpy(cheminlocal,chemin);
+    if(niv == 256)
+        strcat(cheminlocal,"BASE_DESCRIPTEUR_IMAGE_NOIR_ET_BLANC.txt");
+    else strcat(cheminlocal,"BASE_DESCRIPTEUR_IMAGE_COULEUR.txt");
+//     printf("%s\n",cheminlocal);
+    Histo = fopen(cheminlocal, "a+");
     int histo[256] = {0};
     fprintf(Histo,"%d\n",id);
     for(i = 0; i<H; i++) {
@@ -214,25 +220,32 @@ int file1comparedTofile2(int niv, char chemin[10], int id1, int id2) {
 }
 
 void textDescriptorLinker(char fileName[], char chemin[100], int id) {
-    FILE* LISTE_BASE = fopen("LISTE_BASE_IMAGE","a+");
+    char cheminlocal[100];
+    strcpy(cheminlocal,chemin);
+    strcat(cheminlocal,"LISTE_BASE_IMAGE");
+//     printf("%s\n",cheminlocal);
+    FILE* LISTE_BASE = fopen(cheminlocal,"a+");
     fprintf(LISTE_BASE,"%s ", fileName);
     fprintf(LISTE_BASE,"%d\n",id);
     fclose(LISTE_BASE);
 
 }
 
-int blackandWhiteIndexation(char cheminlocal[100]) {
+int blackandWhiteIndexation(char cheminlocal[100], int nbdesc) {
     FILE * Image;
     FILE * LISTE_FICHIER;
     char nomfichier[100];
     int H,L,buffer,nbfichiers,niv= 256;
     LISTE_FICHIER = fopen("listefichier","r");
     char chemin[100];
+    char commande[100];
     strcpy(chemin,cheminlocal);
-    printf("%s\n",chemin);
+    strcpy(commande,"ls ");
+    strcat(commande,chemin);
+    strcat(commande," > listefichier");
 
     while(LISTE_FICHIER == NULL) { /*Cette boucle permet de faire une liste des fichiers présents dans le dossier*/
-        system("ls ./IMAGE_NOIR_ET_BLANC/ > listefichier");
+        system(commande);
         LISTE_FICHIER = fopen("listefichier","r");
     }
 
@@ -248,18 +261,21 @@ int blackandWhiteIndexation(char cheminlocal[100]) {
     int i = 0;
     while(i < nbfichiers) {
         fscanf(LISTE_FICHIER,"%s",nomfichier);
-        strcat(chemin,nomfichier);
-        Image = fopen(chemin, "r");
+        if((i%2) == 1) {
+            strcat(chemin,nomfichier);
+            Image = fopen(chemin, "r");
 
-        if(Image != NULL) {
-            fscanf(Image,"%d ",&H);
-            fscanf(Image,"%d ",&L);
-            fscanf(Image,"%d ",&buffer);
-            histogramme(Image,256,H,L,i+1);
-            fclose(Image);
-        } else printf("Desole probleme d'ouverture niveau 1...\n");
+            if(Image != NULL) {
+                fscanf(Image,"%d ",&H);
+                fscanf(Image,"%d ",&L);
+                fscanf(Image,"%d ",&buffer);
+                histogramme(Image,256,"./Descripteurs/",H,L,nbdesc);
+                textDescriptorLinker(nomfichier,"./Descripteurs/",nbdesc);
+                nbdesc++;
+                fclose(Image);
+            } else printf("Desole probleme d'ouverture niveau 1...\n");
 
-        textDescriptorLinker(nomfichier,chemin,i+1);
+        }
         i++;
         strcpy(chemin, "./IMAGE_NOIR_ET_BLANC/");
     }
@@ -270,18 +286,16 @@ int blackandWhiteIndexation(char cheminlocal[100]) {
 }
 
 
-int colorIndexation(char cheminlocal[100]) {
+int colorIndexation(char cheminlocal[100], int nbdesc) {
 
     FILE * Image;
     FILE * LISTE_FICHIER;
     char nomfichier[100];
     int H,L,buffer,nbfichiers,niv= 256;
     LISTE_FICHIER = fopen("listefichier","r");
-    char cheminNB[100] = "./IMAGE_NOIR_ET_BLANC/";
     char chemin[100];
     char commande[100];
     strcpy(chemin,cheminlocal);
-    printf("%s\n",cheminlocal);
     strcpy(commande,"ls ");
     strcat(commande,chemin);
     strcat(commande," > listefichier");
@@ -304,20 +318,23 @@ int colorIndexation(char cheminlocal[100]) {
     strcpy(commande,chemin);
     while(i < nbfichiers) {
         fscanf(LISTE_FICHIER,"%s",nomfichier);
-        strcat(commande,nomfichier);
-        Image = fopen(commande, "r");
-        Quantification(Image,2);
-        fclose(Image);
-        Image = fopen("IMAGE.txt","r+");
-        if(Image != NULL) {
-            fscanf(Image,"%d ",&H);
-            fscanf(Image,"%d ",&L);
-            fscanf(Image,"%d ",&buffer);
-            histogramme(Image,64,H,L,i+1);
+        if((i%2) == 1) {
+            strcat(commande,nomfichier);
+            Image = fopen(commande, "r");
+            Quantification(Image,2);
             fclose(Image);
-        } else printf("Desole probleme d'ouverture niveau 1...\n");
+            Image = fopen("IMAGE.txt","r+");
+            if(Image != NULL) {
+                fscanf(Image,"%d ",&H);
+                fscanf(Image,"%d ",&L);
+                fscanf(Image,"%d ",&buffer);
+                histogramme(Image,64,"./Descripteurs/",H,L,nbdesc);
+                textDescriptorLinker(nomfichier,"./Descripteurs/",nbdesc);
+                nbdesc++;
+                fclose(Image);
+            } else printf("Desole probleme d'ouverture niveau 1...\n");
 
-        textDescriptorLinker(nomfichier,chemin, i+1);
+        }
         i++;
         strcpy(commande,chemin);
         //strcpy(chemin, "./IMAGE_NOIR_ET_BLANC/");
@@ -345,11 +362,12 @@ int colorIndexation(char cheminlocal[100]) {
 //   return desc;
 // }
 
-// void researchPictures(char fileName[], int niv, int id){
+// void researchPictures(char fileRef[100], int niv,char chemin[100], char fileRes[100]){
 //   int i,desc,max = 0; //desc the id of the descriptor of the most resembling image
+//   desc = descToFileName(
 //   int ref;
 //   for(i = 1; i < 4; i++){
-//     ref = file1comparedTofile2(niv,id,id+i);
+//     ref = file1Tofile2comparison(
 //     if(max < ref){
 //       max = ref;
 //       desc = id+i;
@@ -358,25 +376,50 @@ int colorIndexation(char cheminlocal[100]) {
 //   return desc;
 // }
 
-void descToFileName(int id, char fileName[100], int option) {
+void descToFileName(int id, char chemin[100], char currentfile[100], int option) {
     FILE* F;
-    char currentfile[100];
     int currentid;
+    char cheminlocal[100];
+    strcpy(cheminlocal,chemin);
     if(option == 0) {
-        F = fopen("LISTE_BASE_IMAGE","r+");
+        strcat(cheminlocal,"LISTE_BASE_IMAGE");
+        printf("%s\n",cheminlocal);
+        F = fopen(cheminlocal,"r+");
         fscanf(F,"%s",currentfile);
         fscanf(F,"%d",&currentid);
         while((currentid != id) && (!feof(F))) {
             fscanf(F,"%s",currentfile);
             fscanf(F,"%d",&currentid);
         }
-        strcpy(fileName,currentfile);
+    }
+}
+
+int fileNameToDesc(char chemin[100], char fileName[100], int option) {
+    FILE* F;
+    int currentid;
+    char currentfile[100];
+    char cheminlocal[100];
+    strcpy(cheminlocal,chemin);
+    if(option == 0) {
+        strcat(cheminlocal,"LISTE_BASE_IMAGE");
+        F = fopen(cheminlocal,"r+");
+        fscanf(F,"%s",currentfile);
+        fscanf(F,"%d",&currentid);
+        while((currentfile != fileName) && (!feof(F))) {
+            fscanf(F,"%s",currentfile);
+            fscanf(F,"%d",&currentid);
+        }
+        return currentid;
     }
 }
 
 int file1Tofile2comparison(int niv, char chemin[100],int id1,int id2) {
-    char baseDesc[50] = "BASE_DESCRIPTEUR_IMAGE.txt";
-    strcat(chemin,baseDesc);
-    printf("%s\n",chemin);
-    return file1comparedTofile2(256,chemin,id1,id2);
+    if(niv == 256) {
+        char baseDesc[50] = "BASE_DESCRIPTEUR_IMAGE_NOIR_ET_BLANC.txt";
+        strcat(chemin,baseDesc);
+        printf("%s\n",chemin);
+        return file1comparedTofile2(niv,chemin,id1,id2);
+    } else {
+        char baseDesc[50] = "BASE_DESCRIPTEUR_IMAGE_COULEUR.txt";
+    }
 }
