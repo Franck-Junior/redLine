@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-
+//Looks into the config file for the requested parameter for various uses
 char * getConfig(char * request) {
 	FILE *fp;
 	if ((fp = fopen("config.txt", "r+")) == NULL);

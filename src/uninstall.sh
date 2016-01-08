@@ -1,6 +1,5 @@
 #!/usr/bin/env
 
-
 echo "\nAre you sure you want to uninstall Upssearchtech ? (y)/any key"
 echo "\nEtes-vous sur de vouloir désinstaller Upssearchtech ? (y)/any key"
 

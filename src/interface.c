@@ -27,6 +27,7 @@ char en5[] = "The password you entered is invalid, correct it or enter (u)";
 char fr6[] = "Pour choisir, utilisez les touches indiquées dans le menu";
 char en6[] = "Please use the keys as shown in the menu to choose";
 
+//Copies the string according to the chosen language to display them
 void loadLanguage(char * language) {
 	if (strcmp(language,"fr") == 0) {
 		s1 = strdup(fr1);
@@ -45,6 +46,7 @@ void loadLanguage(char * language) {
 	}
 }
 
+//Compares the input and the password in the config file
 int verifyPassword(char * password) {
 	if (strcmp(password, getConfig("MDP_ADMIN")) == 0) {
 		return 1;
@@ -69,7 +71,7 @@ int main(void) {
 	}
 
 	while(strcmp(temp,"q") != 0) {
-		
+
 		if (strcmp(password,"u") == 0) {
 			printf("%s user\n", s2);
 		} else {
