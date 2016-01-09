@@ -5,22 +5,33 @@
 #include "PictureIndexation.h"
 
 int main(void) {
-    blackandWhiteIndexation("./IMAGE_NOIR_ET_BLANC/",1);
-    colorIndexation("./IMAGE_COULEUR/",5);
-//     file1comparedTofile2(256,1,3);
-//     printf("%d\n",researchPictures(256,1));
+//     blackandWhiteIndexation("./IMAGE_NOIR_ET_BLANC/",1);
+//     colorIndexation("./IMAGE_COULEUR/",5);
+//     strcat(chemin,"BASE_DESCRIPTEUR_IMAGE_NOIR_ET_BLANC.txt");
+//
+//
 //     char chemin[100] = "./Descripteurs/";
+//     char a[10] = "01.txt";char b[10] = "01.txt";
+//     printf("%d\n",file1Tofile2comparison(64,chemin,a,b));
+//
+//
+//     printf("%d:61.txt %d:52.txt\n",fileNameToDesc("./Descripteurs/","61.txt",0),fileNameToDesc("./Descripteurs/","52.txt",0));
+//     printf("%d\n",file1comparedTofile2(256,chemin,3,2));
+//
+//
+//     printf("%d\n",researchPictures(64,"41.txt"));
 //     descToFileName(4,fileName, 0);
 //     printf("%s\n",fileName);
+//
+//
+//
 //     char baseDesc[50] = "BASE_DESCRIPTEUR_IMAGE.txt";
 //     strcat(chemin,baseDesc);
 //     printf("%s\n",chemin);
-//     printf("%d\n",file1Tofile2comparison(256,chemin,3,2));
 //     fscanf(F,"%s.%s",a,b);
 //     char a[50];
 //     char b[50];
 //     descToFileName(11,"./Descripteurs/",a,0);
-//     printf("11:%s %d:42.txt\n",a,fileNameToDesc("./Descripteurs/","42.txt",0));
 
 
     return 0;
