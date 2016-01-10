@@ -20,7 +20,7 @@ void nBitQuantificator(FILE * FichierQuantif, int n, int pixelLevel) {
             pixelLevel = pixelLevel-(int)pow(2,j-1);
 
         }
-    } else printf("Desole probleme d'ouverture niveau 2...\n");
+    } else printf("Desole probleme d'ouverture niveau 2...Il y a eu un problème dans la quantification, veuillez réessayer.\n");
 
 }
 
@@ -236,8 +236,8 @@ int file1comparedTofile2(int niv, char chemin[100], int id1, int id2) {
 	      fclose(Histo2);
 	} else printf("Desole probleme d'ouverture niveau 1...\n");
 
-        Histo1 = fopen("HISTO_1","r+");
-        Histo2 = fopen("HISTO_2","r+");
+        Histo1 = fopen("HISTO_1","r");
+        Histo2 = fopen("HISTO_2","r");
         /*printf("La resultat de la comparaison est : %d. \n",comparison(niv,Histo1,Histo2));*/resultat = comparison(niv,Histo1,Histo2);
         fclose(Histo1);
         fclose(Histo2);
@@ -276,7 +276,7 @@ int blackandWhiteIndexation(char cheminlocal[100], int nbdesc) {
     strcat(commande,chemin);
     strcat(commande," > listefichier");
 
-    while(LISTE_FICHIER == NULL) { /*Cette boucle permet de faire une liste des fichiers présents dans le dossier*/
+    while(LISTE_FICHIER == NULL) { /*Cette boucle permet de faire une liste des fichiers présents dans le dossier oy se trouve les images noirs et blancs*/
         system(commande);
         LISTE_FICHIER = fopen("listefichier","r");
     }
@@ -293,10 +293,14 @@ int blackandWhiteIndexation(char cheminlocal[100], int nbdesc) {
     int i = 0;
     while(i < nbfichiers) {
         fscanf(LISTE_FICHIER,"%s",nomfichier);
-        if((i%2) == 1) {
+        if(nomfichier[((int)strlen(nomfichier))-1] == 't') {
+	    nomfichier[((int)strlen(nomfichier))-1] = 't';
+   nomfichier[((int)strlen(nomfichier))-2] = 'x';
+   nomfichier[((int)strlen(nomfichier))-3] = 't';
+	    
             strcat(chemin,nomfichier);
+	    
             Image = fopen(chemin, "r");
-
             if(Image != NULL) {
                 fscanf(Image,"%d ",&H);
                 fscanf(Image,"%d ",&L);
@@ -352,8 +356,13 @@ int colorIndexation(char cheminlocal[100], int nbdesc) {
     strcpy(commande,chemin);
     while(i < nbfichiers) {
         fscanf(LISTE_FICHIER,"%s",nomfichier);
-        if((i%2) == 1) {
+        if(nomfichier[((int)strlen(nomfichier))-1] == 't') {
+	    nomfichier[((int)strlen(nomfichier))-1] = 't';
+   nomfichier[((int)strlen(nomfichier))-2] = 'x';
+   nomfichier[((int)strlen(nomfichier))-3] = 't';
+	    
             strcat(commande,nomfichier);
+	    
             Image = fopen(commande, "r");
             Quantification(Image,2);
             fclose(Image);
@@ -461,4 +470,35 @@ int file1Tofile2comparison(int niv, char chemin[100], char fileName1[50], char f
         strcat(cheminlocal,baseDesc);
         return file1comparedTofile2(niv,cheminlocal,fileNameToDesc(chemin,fileName1),fileNameToDesc(chemin,fileName2));
     }
+}
+
+
+
+int indexation(char chemin[100],char nomDufichier[100], int nbdesc){
+  FILE* Image;      
+  char cheminlocal[100];
+  char nomfichier[100];
+  int H,L,C;
+	strcpy(cheminlocal,chemin);
+	strcpy(nomfichier,nomDufichier);
+	nomfichier[((int)strlen(nomfichier))-1] = 't';
+   nomfichier[((int)strlen(nomfichier))-2] = 'x';
+   nomfichier[((int)strlen(nomfichier))-3] = 't';
+        strcat(cheminlocal,nomfichier);
+            Image = fopen(cheminlocal, "r");
+            if(Image != NULL) {
+                fscanf(Image,"%d ",&H);
+                fscanf(Image,"%d ",&L);
+                fscanf(Image,"%d ",&C);
+		if(C == 1){
+                histogramme(Image,256,"./Descripteurs/",H,L,nbdesc);
+		} else histogramme(Image,64,"./Descripteurs/",H,L,nbdesc);
+                textDescriptorLinker(nomfichier,"./Descripteurs/",nbdesc);
+                nbdesc++;
+                fclose(Image);
+		return 1;
+            } else printf("Sorry the file %s to be indexed has not been found\n",nomfichier);
+
+
+    return 0;
 }

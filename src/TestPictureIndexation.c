@@ -4,9 +4,12 @@
 #include<string.h>
 #include "PictureIndexation.h"
 
+int nbdesc = 0;
+
 int main(void) {
 //     blackandWhiteIndexation("./IMAGE_NOIR_ET_BLANC/",1);
 //     colorIndexation("./IMAGE_COULEUR/",5);
+    indexation("./IMAGE_COULEUR/","42.txt",nbdesc);
 //
 //
 //     char chemin[100] = "./Descripteurs/";
@@ -18,10 +21,29 @@ int main(void) {
 //     printf("%d\n",file1comparedTofile2(256,chemin,3,2));
 //
 //
-    char a[50] = "61.txt";
-    char b[50];
-    researchPictures(256,a,b);
-    printf("%s\n",b);
+//     researchPictures(256,a,b);
+//     printf("%s\n",b);
+//     char a[50] = "61.jpg";
+//     char b[50] = "txt";
+//     int i;
+//     
+//     FILE* F = fopen("Test écriture en un point d'un fichiers","r+");
+//     for(i = 0; i<3 ; i++){
+//     fprintf(F,"%s est un %s : ",a,b);
+//       fscanf(F," %s ",a);
+//     }
+//       fprintf(F,"fichier");
+//     printf("%c\n",a[((int)strlen(a))-1]);
+//    a[((int)strlen(a))-1] = 't';
+//    a[((int)strlen(a))-2] = 'x';
+//    a[((int)strlen(a))-3] = 't';
+//    printf("%s\n",a);
+//    fclose(F);
+/*
+ * Tu utiliseras pendant l'indexation lorsque tu prends les noms des fichiers jpg et textes une par une et consécutivement. 
+ * Cela te permettra de comparer le nom de l'image au texte  suivant s'il correspondent pas et de passerr directement à la 
+ * suite en signalant que l'un des fichiers n'a pas pu être indéxé
+ */
 //     printf("d0%db\n",researchPictures(64,"01.txt"));
 //     descToFileName(researchPictures(64,"31.txt"),"./Descripteurs/",a,0);
 //
