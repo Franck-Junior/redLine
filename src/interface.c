@@ -54,6 +54,19 @@ int verifyPassword(char * password) {
 		return 0;
 	}
 }
+
+void keywordSearch() {
+	openFile("fictest.txt");
+}
+
+void closestText() {
+}
+
+void imageSearch() {
+}
+
+void audioSearch() {
+}
 int main(void) {
 	printf("What language do you want to use ?/Quel langage voulez-vous utiliser ?(en)glish/(fr)ench\n");
 	scanf("%s", language);
@@ -81,17 +94,14 @@ int main(void) {
 		printf("%s\n", s4);
 		scanf("%s", temp);
 
-		switch(temp) {
-			case 1:
-			break;
-			case 2:
-			break;
-			case 3:
-			break;
-			case 4:
-			break;
-			default:
-			break;
+		if (strcmp(temp,"1") == 0) {
+			keywordSearch();
+		} else if (strcmp(temp,"2") == 0) {
+			closestText();
+		} else if (strcmp(temp,"3") == 0) {
+			imageSearch();
+		} else if (strcmp(temp,"4") == 0) {
+			audioSearch();
 		}
 	}
 }
