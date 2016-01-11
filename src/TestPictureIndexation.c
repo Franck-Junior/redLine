@@ -9,7 +9,7 @@ int nbdesc = 0;
 int main(void) {
 //     blackandWhiteIndexation("./IMAGE_NOIR_ET_BLANC/",1);
 //     colorIndexation("./IMAGE_COULEUR/",5);
-    indexation("./IMAGE_COULEUR/","42.txt",nbdesc);
+    autoIndexation("./IMAGE_COULEUR/",6);
 //
 //
 //     char chemin[100] = "./Descripteurs/";
