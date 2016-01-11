@@ -502,3 +502,38 @@ int indexation(char chemin[100],char nomDufichier[100], int nbdesc){
 
     return 0;
 }
+
+
+
+
+void autoIndexation(char cheminImage[50], int nbdesc){
+  char chemin[50];
+  char commande[50] = "ls " ;
+  strcpy(chemin,cheminImage);
+  strcat(commande,chemin);
+  strcat(commande," > LISTE_FICHIERS_IMAGE");
+  system(commande);
+    FILE* LISTE_FICHIER = fopen("LISTE_FICHIERS_IMAGE","r");
+    int nbfichiers = 0;
+    char nomfichier[50];
+    if(LISTE_FICHIER != NULL){
+    while(!feof(LISTE_FICHIER)) { /*Celle-ci permet de compter le nombre de fichiers dans le dossier*/
+        fscanf(LISTE_FICHIER,"%s",nomfichier);
+        nbfichiers++;
+    }
+    }else printf("Pas bon1\n");
+    fclose(LISTE_FICHIER);
+    nbfichiers -= 1;
+    LISTE_FICHIER = fopen("LISTE_FICHIERS_IMAGE","r");
+    int i = 0;
+    if(LISTE_FICHIER != NULL){
+    while(i < nbfichiers) {
+      fscanf(LISTE_FICHIER,"%s",nomfichier);
+        if(i%2==1) {
+    indexation(chemin,nomfichier,nbdesc);
+    nbdesc ++;
+	}
+	i++;
+    }
+    }else printf("Pas bon2\n");
+}
