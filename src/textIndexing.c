@@ -32,7 +32,7 @@ void indexText(char* fileName) {
     myDescriptor.thermList[0] = initTherm;
     myDescriptor.size = 1;
 
-	FILE* file = fopen(fileName,"r");
+    FILE* file = fopen(fileName,"r");
 
     int character;
     if (file != NULL) {
@@ -203,7 +203,7 @@ char* descriptorToString(textDescriptor myDescriptor) {
     int size = 0;
     char* toString = NULL;
     char* stringTmp = NULL;
-	char buffer[1];
+    char buffer[1];
     int isFirst=0;
     for (int i = 1; i < myDescriptor.size; i++) {
         if(myDescriptor.thermList[i].occurence > 2) {
@@ -212,7 +212,7 @@ char* descriptorToString(textDescriptor myDescriptor) {
                 size = strlen(myDescriptor.thermList[i].word)+4;
                 toString = realloc(toString,size);
                 toString[size-4] = ',';
-		sprintf(buffer, "%d", myDescriptor.thermList[i].occurence);
+                sprintf(buffer, "%d", myDescriptor.thermList[i].occurence);
                 toString = strcat(toString,buffer);
                 toString[size-2] = ';';
                 toString[size-1] = '\0';
@@ -224,14 +224,14 @@ char* descriptorToString(textDescriptor myDescriptor) {
                 toString = realloc(toString,size);
                 toString = strcat(toString,stringTmp);
                 toString = strcat(toString,",");
-		sprintf(buffer, "%d", myDescriptor.thermList[i].occurence);
+                sprintf(buffer, "%d", myDescriptor.thermList[i].occurence);
                 toString = strcat(toString,buffer);
                 toString = strcat(toString,";");
                 toString = strcat(toString,"\0");
             }
         }
     }
-	printf("toString : %s\n",toString);
+    printf("toString : %s\n",toString);
     return toString;
 }
 
@@ -275,25 +275,24 @@ char* parseCharacter(char* string) {
 * \brief
 * Is used inside findWord - Obtain each therm with this method
 */
-char* findTherm(char* line,int position){
+char* findTherm(char* line,int position) {
 
-	const char s1[2] = ";";
-	char *tokenLine = line;
-	char *tokenTherm;
-		
-	tokenTherm = strtok(tokenLine,s1);
-	int cpt = 0;
-	while( tokenTherm != NULL ) 
-	{
-		
-		if(cpt == position){
-			return tokenTherm;
-		}
-		tokenTherm = strtok(NULL, s1);
-		cpt++;
-	}
-		
-	return NULL;
+    const char s1[2] = ";";
+    char *tokenLine = line;
+    char *tokenTherm;
+
+    tokenTherm = strtok(tokenLine,s1);
+    int cpt = 0;
+    while( tokenTherm != NULL ) {
+
+        if(cpt == position) {
+            return tokenTherm;
+        }
+        tokenTherm = strtok(NULL, s1);
+        cpt++;
+    }
+
+    return NULL;
 }
 
 /**
@@ -303,60 +302,58 @@ char* findTherm(char* line,int position){
 * \brief
 * Extract list of file finded
 */
-search* findWord(char* word,int* size){
+search* findWord(char* word,int* size) {
 
-	FILE* file = fopen("../data/text_descriptor.txt","r");
+    FILE* file = fopen("../data/text_descriptor.txt","r");
 
-	*size = 0;
-	search* tabSearch = NULL;
+    *size = 0;
+    search* tabSearch = NULL;
 
-	if (file != NULL) {
-	    char line[256];
+    if (file != NULL) {
+        char line[256];
 
-	/* Treat file line by line */
-	    while (fgets(line, sizeof(line), file)) {
-		const char s[2] = ":";
-		const char s1[2] = ";";
-		const char s2[2] = ",";
-		char *tokenLine;
-		char *file;
-		char *endline = NULL;
-		char *tokenTherm;
-		char *tokenWord;
-		tokenLine = strtok(line, s);
-		file = tokenLine;
-		tokenLine = strtok(NULL, s);
-		int position = 0;
-		while( tokenLine != NULL && *tokenLine != 10) 
-		{
-			/* Obtain next therm with findTherm */
-			char* therm = findTherm(tokenLine,position);
-			/* Separate the word and the occurence */
-			char* thermWord= strsep(&therm,",");
-			int thermOccurence = atoi(strsep(&therm,","));
-			/* If the word match, his added to the list */
-			if(thermWord != NULL){
-				if(strcmp(thermWord,word) == 0) {
-					fprintf(stderr,"find match \n");
-					(*size)++;
-					if(*size == 1){
-						tabSearch = malloc((*size)*sizeof(search));
-					}
-					else {
-						tabSearch = realloc(tabSearch,(*size)*sizeof(search));
-					}
-					tabSearch[(*size)-1].fileName = file;
-					tabSearch[(*size)-1].wordSearch.word = thermWord;
-					tabSearch[(*size)-1].wordSearch.occurence =  thermOccurence;
+        /* Treat file line by line */
+        while (fgets(line, sizeof(line), file)) {
+            const char s[2] = ":";
+            const char s1[2] = ";";
+            const char s2[2] = ",";
+            char *tokenLine;
+            char *file;
+            char *endline = NULL;
+            char *tokenTherm;
+            char *tokenWord;
+            tokenLine = strtok(line, s);
+            file = tokenLine;
+            tokenLine = strtok(NULL, s);
+            int position = 0;
+            while( tokenLine != NULL && *tokenLine != 10) {
+                /* Obtain next therm with findTherm */
+                char* therm = findTherm(tokenLine,position);
+                /* Separate the word and the occurence */
+                char* thermWord= strsep(&therm,",");
+                int thermOccurence = atoi(strsep(&therm,","));
+                /* If the word match, his added to the list */
+                if(thermWord != NULL) {
+                    if(strcmp(thermWord,word) == 0) {
+                        fprintf(stderr,"find match \n");
+                        (*size)++;
+                        if(*size == 1) {
+                            tabSearch = malloc((*size)*sizeof(search));
+                        } else {
+                            tabSearch = realloc(tabSearch,(*size)*sizeof(search));
+                        }
+                        tabSearch[(*size)-1].fileName = file;
+                        tabSearch[(*size)-1].wordSearch.word = thermWord;
+                        tabSearch[(*size)-1].wordSearch.occurence =  thermOccurence;
 
-				}
-			}
-			tokenLine = strtok(NULL, s);
-		}
-	    }
-	    fclose(file);
-	}
+                    }
+                }
+                tokenLine = strtok(NULL, s);
+            }
+        }
+        fclose(file);
+    }
 
-	return tabSearch;
+    return tabSearch;
 }
 
