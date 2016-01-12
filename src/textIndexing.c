@@ -73,7 +73,7 @@ void indexText(char* fileName) {
 void addToBaseDescriptor(char* fileName, char* string) {
 
     if(strlen(string) > 1) {
-        char* redirectionCommand = " >> ../data/descripteur.txt";
+        char* redirectionCommand = " >> ../data/text_descriptor.txt";
         char* command = NULL;
         command = malloc(9+strlen(string)+strlen(redirectionCommand)+strlen(fileName));
         command[0] = 'e';
