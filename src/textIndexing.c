@@ -3,8 +3,6 @@
 * \date 10 december 2015
 * \file textIndexing.c
 * \brief The function implementation about text indexing.h.
-* Method to index : ls <fileName> | XXX.sh >> baseTextDescriptor.txt
-* Where XXX.sh is the text indexing script.
 * 2 implementation : one simple with word stockage and an other with a tree stokage
 */
 
@@ -19,15 +17,13 @@
 
 /**
 * \fn void indexText()
-* \param char*
+* \param FILE
 * \return non-return function
 * \brief
 * Index the file in parameter - Init the descriptor
 */
 void indexText(char* fileName) {
     setlocale(LC_CTYPE, "");
-//printf("debut du programme\n");
-    FILE* file = NULL;
     textDescriptor myDescriptor;
     myDescriptor.thermList = malloc(sizeof(therm));
     therm initTherm;
@@ -35,8 +31,8 @@ void indexText(char* fileName) {
     initTherm.occurence = 0;
     myDescriptor.thermList[0] = initTherm;
     myDescriptor.size = 1;
-//	file = fopen("../data/test_file/Textes/Textes_UTF8/chercheurs_utf8.xml", "r");
-    file = fopen("../data/test_file/Textes/Textes_UTF8/03-Mimer_un_signal_nerveux_pour_utf8.xml", "r");
+
+	FILE* file = fopen(fileName,"r");
 
     int character;
     if (file != NULL) {
@@ -58,7 +54,7 @@ void indexText(char* fileName) {
             printf("%s , occurence : %i\n",myDescriptor.thermList[i].word,myDescriptor.thermList[i].occurence);
         }
         char* result = descriptorToString(myDescriptor);
-        addToBaseDescriptor(result);
+        addToBaseDescriptor(fileName,result);
     } else {
         // On affiche un message d'erreur si on veut
         printf("Impossible d'ouvrir le fichier test.txt");
@@ -74,11 +70,12 @@ void indexText(char* fileName) {
 * \brief
 * Add the descriptor in the text descriptor base
 */
-void addToBaseDescriptor(char* string) {
+void addToBaseDescriptor(char* fileName, char* string) {
+
     if(strlen(string) > 1) {
         char* redirectionCommand = " >> ../data/descripteur.txt";
         char* command = NULL;
-        command = malloc(8+strlen(string)+strlen(redirectionCommand));
+        command = malloc(9+strlen(string)+strlen(redirectionCommand)+strlen(fileName));
         command[0] = 'e';
         command[1] = 'c';
         command[2] = 'h';
@@ -86,11 +83,13 @@ void addToBaseDescriptor(char* string) {
         command[4] = ' ';
         command[5] = '"';
         command[6] = '\0';
+        command = strcat(command,fileName);
+        command = strcat(command,":");
         command = strcat(command,string);
         command = strcat(command,"\"");
         command = strcat(command,redirectionCommand);
         system(command);
-        free(command);
+        free(command); // bug
     }
     free(string);
 }
@@ -105,7 +104,7 @@ void addToBaseDescriptor(char* string) {
 void skipBracket(FILE* file) {
     int characterReaded;
     do {
-        characterReaded = fgetc(file); // On lit le caractère
+        characterReaded = fgetc(file);
     } while (characterReaded != '>' && characterReaded != EOF);
 
 }
@@ -133,7 +132,6 @@ char* getNextWord(FILE* file) {
         ungetc(characterReaded,file);
     }
     string[size-1] = '\0';
-    //printf("%s ",string);
     if(string[0] == '\n' || (int)string[0] == 0 || strlen(string) < 4 || strlen(string) > 10) { // CONFIGURATION
         return NULL;
     }
@@ -172,7 +170,7 @@ void freeMemory(textDescriptor* myDescriptor) {
     for (int i = 1; i < myDescriptor->size-1; i++) {
         free(myDescriptor->thermList[i].word);
     }
-    free(myDescriptor->thermList);
+//free(myDescriptor->thermList);
 }
 
 /**
@@ -205,26 +203,35 @@ char* descriptorToString(textDescriptor myDescriptor) {
     int size = 0;
     char* toString = NULL;
     char* stringTmp = NULL;
+	char buffer[1];
     int isFirst=0;
     for (int i = 1; i < myDescriptor.size; i++) {
         if(myDescriptor.thermList[i].occurence > 2) {
             if(isFirst == 0) {
                 toString = myDescriptor.thermList[i].word;
-                size = strlen(myDescriptor.thermList[i].word)+2;
+                size = strlen(myDescriptor.thermList[i].word)+4;
                 toString = realloc(toString,size);
+                toString[size-4] = ',';
+		sprintf(buffer, "%d", myDescriptor.thermList[i].occurence);
+                toString = strcat(toString,buffer);
                 toString[size-2] = ';';
                 toString[size-1] = '\0';
                 isFirst = 1;
+
             } else {
                 stringTmp = myDescriptor.thermList[i].word;
-                size += strlen(stringTmp)+2;
+                size += strlen(stringTmp)+4;
                 toString = realloc(toString,size);
-                toString[size-1] = '\0';
                 toString = strcat(toString,stringTmp);
+                toString = strcat(toString,",");
+		sprintf(buffer, "%d", myDescriptor.thermList[i].occurence);
+                toString = strcat(toString,buffer);
                 toString = strcat(toString,";");
+                toString = strcat(toString,"\0");
             }
         }
     }
+	printf("toString : %s\n",toString);
     return toString;
 }
 
@@ -260,3 +267,96 @@ char* parseCharacter(char* string) {
     string[size-1] = '\0';
     return string;
 }
+
+/**
+* \fn void findTherm()
+* \param char*, int
+* \return char* the therm of the line
+* \brief
+* Is used inside findWord - Obtain each therm with this method
+*/
+char* findTherm(char* line,int position){
+
+	const char s1[2] = ";";
+	char *tokenLine = line;
+	char *tokenTherm;
+		
+	tokenTherm = strtok(tokenLine,s1);
+	int cpt = 0;
+	while( tokenTherm != NULL ) 
+	{
+		
+		if(cpt == position){
+			return tokenTherm;
+		}
+		tokenTherm = strtok(NULL, s1);
+		cpt++;
+	}
+		
+	return NULL;
+}
+
+/**
+* \fn void findWord()
+* \param char*, int*
+* \return search* the tab of file finded
+* \brief
+* Extract list of file finded
+*/
+search* findWord(char* word,int* size){
+
+	FILE* file = fopen("../data/text_descriptor.txt","r");
+
+	*size = 0;
+	search* tabSearch = NULL;
+
+	if (file != NULL) {
+	    char line[256];
+
+	/* Treat file line by line */
+	    while (fgets(line, sizeof(line), file)) {
+		const char s[2] = ":";
+		const char s1[2] = ";";
+		const char s2[2] = ",";
+		char *tokenLine;
+		char *file;
+		char *endline = NULL;
+		char *tokenTherm;
+		char *tokenWord;
+		tokenLine = strtok(line, s);
+		file = tokenLine;
+		tokenLine = strtok(NULL, s);
+		int position = 0;
+		while( tokenLine != NULL && *tokenLine != 10) 
+		{
+			/* Obtain next therm with findTherm */
+			char* therm = findTherm(tokenLine,position);
+			/* Separate the word and the occurence */
+			char* thermWord= strsep(&therm,",");
+			int thermOccurence = atoi(strsep(&therm,","));
+			/* If the word match, his added to the list */
+			if(thermWord != NULL){
+				if(strcmp(thermWord,word) == 0) {
+					fprintf(stderr,"find match \n");
+					(*size)++;
+					if(*size == 1){
+						tabSearch = malloc((*size)*sizeof(search));
+					}
+					else {
+						tabSearch = realloc(tabSearch,(*size)*sizeof(search));
+					}
+					tabSearch[(*size)-1].fileName = file;
+					tabSearch[(*size)-1].wordSearch.word = thermWord;
+					tabSearch[(*size)-1].wordSearch.occurence =  thermOccurence;
+
+				}
+			}
+			tokenLine = strtok(NULL, s);
+		}
+	    }
+	    fclose(file);
+	}
+
+	return tabSearch;
+}
+
