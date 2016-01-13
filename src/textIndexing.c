@@ -357,3 +357,50 @@ search* findWord(char* word,int* size) {
     return tabSearch;
 }
 
+/**
+* \fn void getIndexingFile()
+* \param int*
+* \return char** the tab of file finded
+* \brief
+* Extract list of ndexed file
+*/
+char** getIndexingFile(int *size) {
+
+    FILE* file = fopen("../data/text_descriptor.txt","r");
+
+    *size = 0;
+    char** listFile = NULL;
+
+    if (file != NULL) {
+        char line[256];
+	int first = 1;
+
+        /* Treat file line by line */
+        while (fgets(line, sizeof(line), file)) {
+		const char s[2] = ":";
+		const char s1[2] = ";";
+		const char s2[2] = ",";
+		char *tokenLine;
+		char *file;
+		char *endline = NULL;
+		char *tokenTherm;
+		char *tokenWord;
+		tokenLine = strtok(line, s);
+		file = tokenLine;
+		if(first) {
+			listFile = malloc(1);
+			listFile[0] = file;
+			(*size)++;
+			first = 0;
+		}
+		else {
+			listFile = realloc(listFile,++(*size));
+			listFile[(*size)-1] = file;
+		}
+
+        }
+        fclose(file);
+    }
+
+    return listFile;
+}
