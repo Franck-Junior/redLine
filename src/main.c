@@ -7,6 +7,7 @@
 int main (void) {
 	//do some shit like try to index the path in config
 	//maybe add some checks here to prevent the user from fucking shit up
+	checkConfig();
 	launch();
 
 }

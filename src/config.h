@@ -4,5 +4,6 @@
 char * getConfig(char * request);
 void openFile(char * file);
 void keywordSearch();
+int checkConfig();
 
 #endif
