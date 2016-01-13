@@ -67,21 +67,25 @@ void loadLanguage(char * language) {
 }
 
 void keywordSearch() {
+	printf("%s\n", s7);
 	openFile("fictest.txt");
 }
 
 void closestText() {
+	printf("%s\n", s8);
 }
 
 void imageSearch() {
+	printf("%s\n", s9);
 	char a[10] = "01.txt" ; char b[10][100];
 	  printf("Taper le nom du fichier image\n"); 
 	  scanf("%s",a);
 	  researchPictures(64,a,b);
-	  printf("Les fichiers les plus proches est du plus ressemblant au moins ressemblant:\n);
+	  printf("Les fichiers les plus proches est du plus ressemblant au moins ressemblant:\n");
 }
 
 void audioSearch() {
+	printf("%s\n", s10);
 }
 
 void launch() {
