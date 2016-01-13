@@ -3,7 +3,6 @@
 
 void loadLanguage(char * language);
 int verifyPassword(char * password);
-void keywordSearch();
 void closestText();
 void imageSearch();
 void audioSearch();
