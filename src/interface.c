@@ -13,19 +13,22 @@ char *s3;
 char *s4;
 char *s5;
 char *s6;
+char *s7;
+char *s8;
 
 char fr1[] = "Bienvenue dans le moteur de recherche Upssearchtech, si vous êtes administrateur tapez votre mot de passe, sinon tapez simplement (u).";
 char en1[] = "Welcome in the Upssearchtech search engine, if you are admin, please enter your password, else simply enter (u).";
 char fr2[] = "Vous êtes";
 char en2[] = "You are";
-char fr3[] = "Tapez (i) si vous voulez lancer une indexation manuelle";
-char en3[] = "Press (i) if you want to index manually";
+char fr3[] = "Tapez (0) si vous voulez lancer une indexation manuelle";
+char en3[] = "Press (0) if you want to index manually";
 char fr4[] = "Choisissez votre type de recherche :\n(1) Recherche par occurences d'un mot-clé\n(2) Recherche des textes les plus proches d'un texte donné\n(3) Recherche d'un document de type Image\n(4) Recherche d'un document de type Audio\n(q)uitter";
 char en4[] = "What are you looking for ?\n(1) Search by hits of a key-word\n(2) Closest text of a given one\n(3) Image research\n(4) Audio research\n(q)uit";
 char fr5[] = "Le mot de passe que vous avez rentré est erronné, corrigez-le ou tapez (u)";
 char en5[] = "The password you entered is invalid, correct it or enter (u)";
 char fr6[] = "Pour choisir, utilisez les touches indiquées dans le menu";
 char en6[] = "Please use the keys as shown in the menu to choose";
+char fr7[] = "Merci 
 
 //Copies the string according to the chosen language to display them
 void loadLanguage(char * language) {
@@ -35,23 +38,14 @@ void loadLanguage(char * language) {
 		s3 = strdup(fr3);
 		s4 = strdup(fr4);
 		s5 = strdup(fr5);
-		s5 = strdup(fr6);
+		s6 = strdup(fr6);
 	} else if (strcmp(language,"en") == 0) {
 		s1 = strdup(en1);
 		s2 = strdup(en2);
 		s3 = strdup(en3);
 		s4 = strdup(en4);
 		s5 = strdup(en5);
-		s5 = strdup(en6);
-	}
-}
-
-//Compares the input and the password in the config file
-int verifyPassword(char * password) {
-	if (strcmp(password, getConfig("MDP_ADMIN")) == 0) {
-		return 1;
-	} else {
-		return 0;
+		s6 = strdup(en6);
 	}
 }
 
@@ -63,6 +57,11 @@ void closestText() {
 }
 
 void imageSearch() {
+	char a[10] = "01.txt" ; char b[10][100];
+	  printf("Taper le nom du fichier image\n"); 
+	  scanf("%s",a);
+	  researchPictures(64,a,b);
+	  printf("Les fichiers les plus proches est du plus ressemblant au moins ressemblant:\n);
 }
 
 void audioSearch() {
@@ -103,6 +102,8 @@ void launch() {
 			imageSearch();
 		} else if (strcmp(temp,"4") == 0) {
 			audioSearch();
+		} else if (strcmp(temp, "5") == 0) {
+			manualIndex();
 		}
 	}
 }

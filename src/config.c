@@ -7,7 +7,7 @@
 char * getConfig(char * request) {
 	FILE *fp;
 	if ((fp = fopen("config.txt", "r+")) == NULL) {
-		return "Could not open  config file/Impossible d'ouvrir le fichier de configuration";
+		return "Could not open config file/Impossible d'ouvrir le fichier de configuration";
 	}
 	char temp[92];
 	char * res;
@@ -30,6 +30,15 @@ char * getConfig(char * request) {
 void openFile(char * file) {
 	char command[100] = "xdg-open ";
 	strcat(command, file);
-	int stat = system(command);
-
+	system(command);
 }
+
+//Compares the input and the password in the config file
+int verifyPassword(char * password) {
+	if (strcmp(password, getConfig("MDP_ADMIN")) == 0) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
