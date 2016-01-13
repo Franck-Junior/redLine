@@ -3,8 +3,6 @@
 * \date 4 december 2015
 * \file textIndexing.h
 * \brief The struct and function about text indexing.
-* Method to index : ls <fileName> | XXX.sh >> baseTextDescriptor.txt
-* Where XXX.sh is the text indexing script.
 */
 
 #include <stdlib.h>
@@ -26,15 +24,21 @@ typedef struct {
 * The text descriptor contains information about a specific text file.
 */
 typedef struct {
-    therm* thermList; // pourquoi pas utiliser une pile/file
+    therm* thermList;
     int size;
 } textDescriptor;
+
+typedef struct {
+    therm wordSearch;
+    char* fileName;
+} search;
+
 
 /* ---------------  FUNCTION --------------- */
 
 /**
 * \fn void indexText()
-* \param char*
+* \param FILE
 * \return non-return function
 * \brief
 * Index the file in parameter - Init the descriptor
@@ -48,7 +52,7 @@ void indexText(char* fileName);
 * \brief
 * Add the descriptor in the text descriptor base
 */
-void addToBaseDescriptor(char* string);
+void addToBaseDescriptor(char* fileName, char* string);
 
 /**
 * \fn void skipBracket()
@@ -112,3 +116,21 @@ char* descriptorToString(textDescriptor myDescriptor);
 * Do all treatment the string
 */
 char* parseCharacter(char* string);
+
+/**
+* \fn void findTherm()
+* \param char*, int
+* \return char* the therm of the line
+* \brief
+* Is used inside findWord - Obtain each therm with this method
+*/
+char* findTherm(char* line,int position);
+
+/**
+* \fn void findWord()
+* \param char*, int*
+* \return search* the tab of file finded
+* \brief
+* Extract list of file finded
+*/
+search* findWord(char* word,int* size);
