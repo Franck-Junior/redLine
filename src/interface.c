@@ -1,8 +1,8 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "config.c"
-//#include "interface.h"
+#include "config.h"
+#include "interface.h"
 
 char language[3];
 char password[9];
@@ -67,7 +67,8 @@ void imageSearch() {
 
 void audioSearch() {
 }
-int main(void) {
+
+void launch() {
 	printf("What language do you want to use ?/Quel langage voulez-vous utiliser ?(en)glish/(fr)ench\n");
 	scanf("%s", language);
 	while (strcmp(language,"en") != 0 && strcmp(language,"fr") != 0) {
