@@ -13,6 +13,10 @@ char *s3;
 char *s4;
 char *s5;
 char *s6;
+char *s7;
+char *s8;
+char *s9;
+char *s10;
 
 char fr1[] = "Bienvenue dans le moteur de recherche Upssearchtech, si vous êtes administrateur tapez votre mot de passe, sinon tapez simplement (u).";
 char en1[] = "Welcome in the Upssearchtech search engine, if you are admin, please enter your password, else simply enter (u).";
@@ -26,6 +30,14 @@ char fr5[] = "Le mot de passe que vous avez rentré est erronné, corrigez-le ou
 char en5[] = "The password you entered is invalid, correct it or enter (u)";
 char fr6[] = "Pour choisir, utilisez les touches indiquées dans le menu";
 char en6[] = "Please use the keys as shown in the menu to choose";
+char fr7[] = "Entrez un mot-clé pour trouver les textes avec le plus d'occurences";
+char en7[] = "Enter a keyword to find the texts with the most hits";
+char fr8[] = "Entrez le chemin d'un texte pour trouver les textes les plus ressemblants";
+char en8[] = "Enter the path of a text to find the closest texts";
+char fr9[] = "Entrez le chemin d'une image pour trouver images les plus ressemblantes";
+char en9[] = "Enter the path of an image to find the closest images";
+char fr10[] = "Entrez le chemin d'un jingle audio pour trouver le fichier le contenant";
+char en10[] = "Enter the path of an audio sample to find the containing file";
 
 //Copies the string according to the chosen language to display them
 void loadLanguage(char * language) {
@@ -46,7 +58,7 @@ void loadLanguage(char * language) {
 	}
 }
 
- int nbdescim = 1;
+int nbdescim = 1;
  
 //Compares the input and the password in the config file
 int verifyPassword(char * password) {
@@ -79,11 +91,11 @@ autoIndexation("./IMAGE_COULEUR/",&nbdescim);
 //     }
   
   
-//     char b[50][100];
-//   printf("Taper le nom du fichier image\n"); 
-//   scanf("%s",a);
-//   printf("Les fichiers les plus proches et du plus ressemblant au moins ressemblant:\n");
-//   researchPictures(64,a,b,5);
+    char b[50][100];
+   printf("Taper le nom du fichier image\n"); 
+   scanf("%s",a);
+   printf("Les fichiers les plus proches et du plus ressemblant au moins ressemblant:\n");
+   researchPictures(64,a,b,10);
 }
 
 void audioSearch() {
