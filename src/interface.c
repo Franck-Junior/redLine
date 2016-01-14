@@ -38,6 +38,8 @@ char fr9[] = "Entrez le chemin d'une image pour trouver images les plus ressembl
 char en9[] = "Enter the path of an image to find the closest images";
 char fr10[] = "Entrez le chemin d'un jingle audio pour trouver le fichier le contenant";
 char en10[] = "Enter the path of an audio sample to find the containing file";
+char fr11[] = "Résultat :";
+char en11[] = "Result :";
 
 //Copies the string according to the chosen language to display them
 void loadLanguage(char * language) {
@@ -47,18 +49,28 @@ void loadLanguage(char * language) {
 		s3 = strdup(fr3);
 		s4 = strdup(fr4);
 		s5 = strdup(fr5);
-		s5 = strdup(fr6);
+		s6 = strdup(fr6);
+		s7 = strdup(fr7);
+		s8 = strdup(fr8);
+		s9 = strdup(fr9);
+		s10 = strdup(fr10);
+		s11 = strdup(fr11);
 	} else if (strcmp(language,"en") == 0) {
 		s1 = strdup(en1);
 		s2 = strdup(en2);
 		s3 = strdup(en3);
 		s4 = strdup(en4);
 		s5 = strdup(en5);
-		s5 = strdup(en6);
+		s6 = strdup(en6);
+		s7 = strdup(en7);
+		s8 = strdup(en8);
+		s9 = strdup(en9);
+		s10 = strdup(en10);
+		s11 = strdup(en11);
 	}
 }
 
-int nbdescim = 1;
+//int nbdescim = 1;
  
 //Compares the input and the password in the config file
 int verifyPassword(char * password) {
@@ -70,11 +82,14 @@ int verifyPassword(char * password) {
 }
 
 void keywordSearch() {
-// 	openFile("fictest.txt");
-  indexText("voila");
+	printf("%s\n", s7);
+	scanf("%s",a);
+	openFile("fictest.txt");
 }
 
 void closestText() {
+	printf("%s\n", s8);
+	scanf("%s",a);
 }
 
 void imageSearch() {
@@ -92,10 +107,11 @@ autoIndexation("./IMAGE_COULEUR/",&nbdescim);
   
   
     char b[50][100];
-   printf("Taper le nom du fichier image\n"); 
+   printf("%s\n", s3);
    scanf("%s",a);
-   printf("Les fichiers les plus proches et du plus ressemblant au moins ressemblant:\n");
+   printf("%s\n", s11);
    researchPictures(64,a,b,10);
+	openFile(b[0]);
 }
 
 void audioSearch() {
