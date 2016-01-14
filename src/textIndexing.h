@@ -134,3 +134,12 @@ char* findTherm(char* line,int position);
 * Extract list of file finded
 */
 search* findWord(char* word,int* size);
+
+/**
+* \fn void getIndexingFile()
+* \param int*
+* \return char** the tab of file finded
+* \brief
+* Extract list of ndexed file
+*/
+char** getIndexingFile(int* size);

@@ -54,8 +54,8 @@ int file1Tofile2comparison(int niv, char chemin[100],char fileName1[50], char fi
  * and giving in "chemin" the file descriptor path
  * it then returns the result
  */
-void researchPictures(int niv, char fileName[50], char fileNamefound[50]);
+void researchPictures(int niv, char fileName[50], char filesNamefound[50][100], int releventfilesNumber);
 /*
- * on mettra le chemin du dossier du fichier à chercher en paramètre. ou pas. Pour faire l'implémentation globale, fait en sorte que 
+ * on mettra le chemin du dossier du fichier à chercher en paramètre. ou pas. Pour faire l'implémentation globale, fait en sorte que
  * l'utilisateur normale accède directement à la recherche en fait une indexation auto préalable :Voir l'interface et tous ce qu'arélien a fait
  */
