@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "config.c"
-//#include "interface.h"
+#include "interface.h"
+#include "textIndexing.h"
+#include "PictureIndexation.h"
+
 
 char language[3];
 char password[9];
@@ -40,7 +43,10 @@ char fr10[] = "Entrez le chemin d'un jingle audio pour trouver le fichier le con
 char en10[] = "Enter the path of an audio sample to find the containing file";
 char fr11[] = "Résultat :";
 char en11[] = "Result :";
-
+char fr12[] = "Désolé cette fonction n'est pas disponible";
+char en12[] = "Sorry this feature is not available"; 
+char fr13[] = "Nom de fichier       N° d'occurences";
+char en13[] = "File name            N° of hits";
 //Copies the string according to the chosen language to display them
 void loadLanguage(char * language) {
 	if (strcmp(language,"fr") == 0) {
@@ -55,6 +61,8 @@ void loadLanguage(char * language) {
 		s9 = strdup(fr9);
 		s10 = strdup(fr10);
 		s11 = strdup(fr11);
+		s12 = strdup(fr12);
+		s13 = strdup(fr13);
 	} else if (strcmp(language,"en") == 0) {
 		s1 = strdup(en1);
 		s2 = strdup(en2);
@@ -67,24 +75,34 @@ void loadLanguage(char * language) {
 		s9 = strdup(en9);
 		s10 = strdup(en10);
 		s11 = strdup(en11);
+		s12 = strdup(en12);
+		s13 = strdup(en13);
 	}
 }
 
 //int nbdescim = 1;
 void keywordSearch() {
+	char keyWord[getConfig("TAILLE_MOT_MAX")];
 	printf("%s\n", s7);
-	scanf("%s",a);s
-	openFile("fictest.txt");
+	scanf("%s",keyWord);
+	search* res = findWord(keyWord, 10);
+	printf("%s\n", s13);
+	for (int i = 0;i < 10;i++) {
+		search *temp = res+(sizeof(search)*i);
+		printf("%s %d\n", temp->fileName, temp->wordSearch.occurence);
+	}
+	openFile(res->fileName);
 }
 
 void closestText() {
+	char fileName[100];
 	printf("%s\n", s8);
-	scanf("%s",a);
-	printf("Désole, cette fonction de recherche n'est pas disponible\n");
+	scanf("%s",fileName);
+	printf("%s\n", s12);
 }
 
 void imageSearch() {
-  char a[100],c[100];
+  char fileName[100],c[100];
 autoIndexation("./IMAGE_NOIR_ET_BLANC/",&nbdescim);
 autoIndexation("./IMAGE_COULEUR/",&nbdescim);
 //   if(strcmp(password,"u") != 0){
