@@ -37,25 +37,6 @@ int quantiToPixellevel(int niv, char quanti[]) {
 
 
 
-
-void ImageBuilder(int H, int L) {
-    FILE * Image;
-    int i,j;
-    Image = fopen("IMAGE.txt", "w+");
-    if(Image != NULL) {
-        for(i = 0; i < H; i++) {
-            for(j = 0; j < L; j++) {
-                fprintf(Image,"%d\t",2*i*j);
-            }
-            fprintf(Image,"\n");
-        }
-        fclose(Image);
-    }
-}
-
-
-
-
 void Quantification(FILE* Image, int n) {
     int j,i,a,H,L;
     char quanti[2];
@@ -141,16 +122,16 @@ void Quantification(FILE* Image, int n) {
 
 
 
-
 void histogramme(FILE* Image, int niv, char chemin[100], int H, int L, int id) {
     FILE* Histo;
     int i,j,a;
     char cheminlocal[100];
     strcpy(cheminlocal,chemin);
+    
     if(niv == 256)
         strcat(cheminlocal,"BASE_DESCRIPTEUR_IMAGE_NOIR_ET_BLANC.txt");
     else strcat(cheminlocal,"BASE_DESCRIPTEUR_IMAGE_COULEUR.txt");
-//     printf("%s\n",cheminlocal);
+    
     Histo = fopen(cheminlocal, "a+");
     int histo[256] = {0};
     fprintf(Histo,"%d\n",id);
@@ -158,9 +139,7 @@ void histogramme(FILE* Image, int niv, char chemin[100], int H, int L, int id) {
         for(j = 0; j<L; j++) {
             fscanf(Image,"%d ",&a);
             histo[a]++;
-
         }
-
     }
 
     for(i = 0; i < niv; i++) fprintf(Histo,"%d ",histo[i]);
@@ -170,10 +149,8 @@ void histogramme(FILE* Image, int niv, char chemin[100], int H, int L, int id) {
 
 
 
-
 int comparison(int niv, FILE* Histo1, FILE* Histo2) {
     int i,a,b,distance = 0;
-
     for(i = 0; i < niv; i++) {
         fscanf(Histo1,"%d ",&a);
         fscanf(Histo2,"%d ",&b);
@@ -182,7 +159,6 @@ int comparison(int niv, FILE* Histo1, FILE* Histo2) {
     }
     return distance;
 }
-
 
 
 
@@ -195,7 +171,8 @@ int file1comparedTofile2(int niv, char chemin[100], int id1, int id2) {
 
     Descripteurs = fopen(chemin, "r");
     if(Descripteurs != NULL) {
-        Histo1 = fopen("HISTO_1","w+");
+        
+      Histo1 = fopen("HISTO_1","w+");
         fscanf(Descripteurs,"%d ",&id);
         while((!feof(Descripteurs))&&(id != id1)) {
             for(i = 0; i < niv; i++) {
@@ -203,21 +180,24 @@ int file1comparedTofile2(int niv, char chemin[100], int id1, int id2) {
             }
             fscanf(Descripteurs,"%d ",&id);
         }
+        
         if(id == id1) {
             for(i = 0; i < niv; i++) {
                 fscanf(Descripteurs,"%d ",&L);
                 fprintf(Histo1,"%d ",L);
-
             }
 
         }
         fclose(Descripteurs);
         fclose(Histo1);
-    } else printf("Comparison issue. The descriptor base of the image 1 is not in the directory. Please check\n");
+    } 
+    
+    else printf("Comparison issue. The descriptor base of the image 1 is not in the directory. Please check\n");
 
     Descripteurs = fopen(chemin, "r");
     if(Descripteurs != NULL) {
-        Histo2 = fopen("HISTO_2","w+");
+        
+      Histo2 = fopen("HISTO_2","w+");
         fscanf(Descripteurs,"%d ",&id);
         while((!feof(Descripteurs))&&(id != id2)) {
             for(i = 0; i < niv; i++) {
@@ -225,6 +205,7 @@ int file1comparedTofile2(int niv, char chemin[100], int id1, int id2) {
             }
             fscanf(Descripteurs,"%d ",&id);
         }
+        
         if(id == id2) {
 
             for(i = 0; i < niv; i++) {
@@ -234,18 +215,19 @@ int file1comparedTofile2(int niv, char chemin[100], int id1, int id2) {
         }
         fclose(Descripteurs);
         fclose(Histo2);
-    } else printf("Comparison issue. The descriptor base of the image 2 is not in the directory. Please check\n");
+    } 
+    
+    else printf("Comparison issue. The descriptor base of the image 2 is not in the directory. Please check\n");
 
     Histo1 = fopen("HISTO_1","r");
     Histo2 = fopen("HISTO_2","r");
-    /*printf("La resultat de la comparaison est : %d. \n",comparison(niv,Histo1,Histo2));*/resultat = comparison(niv,Histo1,Histo2);
+   resultat = comparison(niv,Histo1,Histo2);
     fclose(Histo1);
     fclose(Histo2);
     system("rm HISTO_1");
     system("rm HISTO_2");
     return resultat;
 }
-
 
 
 
@@ -579,39 +561,3 @@ void autoIndexation(char cheminImage[50], int nbdesc) {
         }
     } else printf("The file LISTE_FICHIERS_IMAGE is nowhere in the directory. Please check.\n");
 }
-
-
-
-// void researchPictures(int niv, char fileName[50], char filesNamefound[50][100]) {
-//     int i,j,desc,max = 0; //desc the id of the descriptor of the most resembling image
-//     int id = fileNameToDesc("./Descripteurs/",fileName);
-//     char cheminlocal[100];
-//     char filesName[50][100];
-//     char buffer[50];
-//     if(niv == 64) strcpy(cheminlocal,"./Descripteurs/BASE_DESCRIPTEUR_IMAGE_COULEUR.txt");
-//     else strcpy(cheminlocal,"./Descripteurs/BASE_DESCRIPTEUR_IMAGE_NOIR_ET_BLANC.txt");
-//     int ref = 0;
-//     for(i = 5; i < 15; i++) {
-//             descToFileName(i,"./Descripteurs/",filesNamefound[ref]);
-//       ref++;
-//         }
-// 
-// //     for(i = 0; i < 9; i++) {
-// //       for(j = i; j < 10; i++) {	
-//         ref = file1comparedTofile2(niv,cheminlocal,fileNameToDesc("./Descripteurs/",fileName),fileNameToDesc("./Descripteurs/",filesNamefound[7]));;
-//             printf("%d\n",ref);
-// // ref = file1comparedTofile2(niv,cheminlocal,9,8);
-// // 	    printf("ICI!!!!!!!!!!! %d\n",ref);
-// //         if((max < ref)&& !strcmp(filesNamefound[j],fileName)) {
-// //             max = ref;
-// // 	    strcpy(buffer,filesNamefound[i]);
-// // 	    strcpy(filesNamefound[i],filesNamefound[j]);
-// // 	    strcpy(filesNamefound[j],buffer);
-// //         }
-// //     }
-// //     max = 0;
-// //     }
-// //         for(i = 0; i < 10; i++) {
-// //         }
-//         
-// }
