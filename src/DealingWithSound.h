@@ -1,3 +1,6 @@
+#ifndef __DEALINGWITHSOUND_H__
+#define __DEALINGWITHSOUND_H__
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -5,9 +8,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
+    
+extern int TAILLE_MAX_CHEMIN;
+extern int NOMBRE_ECHANTILLONS;
+extern int NOMBRE_INTERVALLES;
 
-//configuration file
+int IndexFileAudio(char fileName[]);
 
+int searchAudio(char *searched);
 
  typedef struct WAVE{
      //[Bloc de déclaration d'un fichier au format WAVE]
@@ -65,3 +73,4 @@ Sample values are given above for a 16-bit stereo source.
 NOTES IMPORTANTES :  Les octets des mots sont stockés sous la forme  (i.e., en "little endian")
 */
 
+#endif
