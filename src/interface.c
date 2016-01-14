@@ -20,6 +20,9 @@ char *s7;
 char *s8;
 char *s9;
 char *s10;
+char *s11;
+char *s12;
+char *s13;
 
 char fr1[] = "Bienvenue dans le moteur de recherche Upssearchtech, si vous êtes administrateur tapez votre mot de passe, sinon tapez simplement (u).";
 char en1[] = "Welcome in the Upssearchtech search engine, if you are admin, please enter your password, else simply enter (u).";
@@ -44,7 +47,7 @@ char en10[] = "Enter the path of an audio sample to find the containing file";
 char fr11[] = "Résultat :";
 char en11[] = "Result :";
 char fr12[] = "Désolé cette fonction n'est pas disponible";
-char en12[] = "Sorry this feature is not available"; 
+char en12[] = "Sorry this feature is not available";
 char fr13[] = "Nom de fichier       N° d'occurences";
 char en13[] = "File name            N° of hits";
 //Copies the string according to the chosen language to display them
@@ -113,8 +116,8 @@ autoIndexation("./IMAGE_COULEUR/",&nbdescim);
 //     indexation(a,c,nbdescim);
 //     nbdescim++;
 //     }
-  
-  
+
+
     char b[50][100];
    printf("%s\n", s3);
    scanf("%s",a);
