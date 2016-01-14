@@ -71,25 +71,16 @@ void loadLanguage(char * language) {
 }
 
 //int nbdescim = 1;
- 
-//Compares the input and the password in the config file
-int verifyPassword(char * password) {
-	if (strcmp(password, getConfig("MDP_ADMIN")) == 0) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
 void keywordSearch() {
 	printf("%s\n", s7);
-	scanf("%s",a);
+	scanf("%s",a);s
 	openFile("fictest.txt");
 }
 
 void closestText() {
 	printf("%s\n", s8);
 	scanf("%s",a);
+	printf("Désole, cette fonction de recherche n'est pas disponible\n");
 }
 
 void imageSearch() {
