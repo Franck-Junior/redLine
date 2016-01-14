@@ -59,3 +59,59 @@ int verifyPassword(char * password) {
 	}
 }
 
+/* Manage folder and sort before indexing function */
+// works with absolute path
+// possibility of some error in the table - sometimes a case change his own value to something wrong
+char** getFileToIndex(char** textFile, int textSize) {
+	/* Get list of file possibly to index */
+	char** fileList = NULL;
+
+	char* folder = getConfig("CHEMIN");
+	char* order = "./../script/stockFile.sh ";
+	char* finalOrder = (char *) malloc(1 + strlen(order)+ strlen(folder) );
+	strcpy(finalOrder, order);
+	strcat(finalOrder, folder);
+ 
+	system(finalOrder);
+
+	FILE* file = fopen("../script/listFile.txt","r");
+	int character;
+	int size = 0;
+	int cpt = 0;
+	if (file != NULL) {
+	        char line[256];
+		fgets(line, sizeof(line), file);
+		size = atoi(line);
+		fileList = malloc(size);
+		while (fgets(line, sizeof(line), file) && cpt < size) {
+			fileList[cpt] = malloc(strlen(line)+1);
+			strcpy(fileList[cpt],line);
+			fileList[cpt][strlen(line)-1] = '\0';
+			cpt++;
+		}
+	}
+	fclose(file);
+
+	/* remove indexing file of the list */
+	// TO DO : remove sound file and picture file already indexing		
+	for(int i=0 ; i<size ; ++i) {
+		fprintf(stderr,"error : %s\n",fileList[i]);
+	}
+
+	for(int i=0 ; i<size ; ++i) {
+		for(int j=0 ; j<textSize ; ++j) {
+			if(fileList[i] != NULL && textFile[j] != NULL) {
+				if (strstr(fileList[i], textFile[j]) != NULL) {
+					fileList[i] = NULL;
+				}
+			}
+			fprintf(stderr,"error : %s\n",fileList[i]);
+		}
+	}
+
+	/* FREE PART */
+	free(finalOrder);
+	system("rm ../script/listFile.txt");
+
+	return fileList;
+}
