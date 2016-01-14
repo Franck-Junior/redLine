@@ -46,6 +46,8 @@ void loadLanguage(char * language) {
 	}
 }
 
+ int nbdescim = 1;
+ 
 //Compares the input and the password in the config file
 int verifyPassword(char * password) {
 	if (strcmp(password, getConfig("MDP_ADMIN")) == 0) {
@@ -64,14 +66,24 @@ void closestText() {
 }
 
 void imageSearch() {
+  char a[100],c[100];
+autoIndexation("./IMAGE_NOIR_ET_BLANC/",&nbdescim);
+autoIndexation("./IMAGE_COULEUR/",&nbdescim);
+//   if(strcmp(password,"u") != 0){
+//     printf("Voulez-vous effectuer une indexation manuelle d'image? Le repertoire puis le nom  de l'image?\n");
+//     while(strcmp(a,"quitter") != 0){
+//     scanf("%s",a);
+//     scanf("%s",c);
+//     indexation(a,c,nbdescim);
+//     nbdescim++;
+//     }
   
-//   autoIndexation("./IMAGE_COULEUR/",5);
   
-  char a[10] = "01.txt" ; char b[10][100];
-  printf("Taper le nom du fichier image\n"); 
-  scanf("%s",a);
-  researchPictures(64,a,b);
-  printf("Les fichiers les plus proches est du plus ressemblant au moins ressemblant:\n);
+//     char b[50][100];
+//   printf("Taper le nom du fichier image\n"); 
+//   scanf("%s",a);
+//   printf("Les fichiers les plus proches et du plus ressemblant au moins ressemblant:\n");
+//   researchPictures(64,a,b,5);
 }
 
 void audioSearch() {

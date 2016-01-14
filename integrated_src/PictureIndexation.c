@@ -530,7 +530,7 @@ int indexation(char chemin[100],char nomDufichier[100], int nbdesc) {
 
 
 
-void autoIndexation(char cheminImage[50], int nbdesc) {
+void autoIndexation(char cheminImage[50], int* nbdesc) {
     char chemin[50];
     char commande[50] = "ls " ;
     strcpy(chemin,cheminImage);
@@ -554,8 +554,8 @@ void autoIndexation(char cheminImage[50], int nbdesc) {
         while(i < nbfichiers) {
             fscanf(LISTE_FICHIER,"%s",nomfichier);
             if(i%2==1) {
-                indexation(chemin,nomfichier,nbdesc);
-                nbdesc ++;
+                indexation(chemin,nomfichier,(*nbdesc));
+                (*nbdesc) ++;
             }
             i++;
         }
